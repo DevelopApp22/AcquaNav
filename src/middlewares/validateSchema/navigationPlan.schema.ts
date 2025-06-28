@@ -33,7 +33,7 @@ export const isoDateString = z.string().refine(val => {
  */
 
 export const waypointSchema = z.object({
-  lat: z.number().min(-90,ErrorMessages.LATITUDE_TOO_LOW).max(90,ErrorMessages.LONGITUDE_TOO_HIGH),
+  lat: z.number().min(-90,ErrorMessages.LATITUDE_TOO_LOW).max(90,ErrorMessages.LATITUDE_TOO_HIGH),
   lon: z.number().min(-180,ErrorMessages.LONGITUDE_TOO_LOW).max(180,ErrorMessages.LONGITUDE_TOO_HIGH),
 }).strict();
 

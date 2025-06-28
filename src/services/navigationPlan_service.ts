@@ -7,7 +7,7 @@ import { UserRepository } from "../repository/user_repository";
 import { createBoundingBoxPolygon, createLineStringFromCoords, isRouteOutsideBox } from "../utils/geo_spatial_utils";
 import { TokenCosts } from "../enum/token_cost";
 import { INavigationPlanQuery } from "../types/navigationPlanQuery";
-import { FilterQuery } from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 import { StatusNavigation } from "../enum/statusNavigation";
 
 /**

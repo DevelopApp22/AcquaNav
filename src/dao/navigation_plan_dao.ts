@@ -66,6 +66,7 @@ export class NavigationPlanDao implements IDao<INavigationPlan> {
         await NavigationPlan.findByIdAndDelete(planId);
     }
 
+
     /**
      * Recupera i piani di navigazione filtrati secondo una query personalizzata.
      * @param filterQuery Oggetto con i criteri di filtro (es. stato, date, utente).

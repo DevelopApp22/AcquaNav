@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { isoDateString } from "./navigationPlan.schema";
 import { ExportFormat } from "../../enum/exportFormat";
-import { UserRole } from "../../enum/userRole";
 import { StatusNavigation } from "../../enum/statusNavigation";
 
 

@@ -8,6 +8,6 @@
  * @property lat Latitudine (valori validi: -90 a +90)
  */
 export type Waypoint = {
-  lon: number;
   lat: number;
+  lon: number;
 };

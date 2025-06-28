@@ -1,5 +1,6 @@
 import { ExportFormat } from "../enum/exportFormat";
-import { StatusNavigation } from "../model/navigationPlan.interface";
+import { StatusNavigation } from "../enum/statusNavigation";
+
 
 export interface INavigationPlanQuery {
   status?: StatusNavigation;    // es.: 'pending' | 'approved' | 'rejected' ecc.

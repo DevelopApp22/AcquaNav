@@ -1,4 +1,4 @@
-import { model, Schema, Types } from "mongoose";
+import mongoose, { model, Schema, Types } from "mongoose";
 
 import { INavigationPlan } from "../navigationPlan.interface";
 import { StatusNavigation } from "../../enum/statusNavigation";
@@ -19,7 +19,7 @@ import { StatusNavigation } from "../../enum/statusNavigation";
 
 const NavigationPlanSchema = new Schema<INavigationPlan>({
   userId: {
-    type: String, 
+    type: Schema.Types.ObjectId, 
     ref: 'User',
     required: true
   },

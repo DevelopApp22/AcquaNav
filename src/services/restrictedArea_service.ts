@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import { ErrEnum } from "../factory/error/error_enum";
 import { ErrorFactory } from "../factory/error/error_factory";
 import { IRestrictedArea } from "../model/restrictedArea.interface";
@@ -43,7 +44,7 @@ export class RestrictedAreaService {
      * @returns L'area aggiornata.
      * @throws Eccezione se l'area non esiste o se esiste un duplicato sui waypoint.
      */
-    async updateRestrictedArea(areaId: string, updatedData: IRestrictedArea): Promise<IRestrictedArea | null> {
+    async updateRestrictedArea(areaId: ObjectId, updatedData: IRestrictedArea): Promise<IRestrictedArea | null> {
         const existingArea = await this.restrictedAreaRepository.findAreaById(areaId);
         if (!existingArea) {
             throw this.errorFactory.getError(ErrEnum.RestrictedAreaNotFound);
@@ -68,7 +69,7 @@ export class RestrictedAreaService {
      * @param areaId Identificativo dell'area da eliminare.
      * @throws Eccezione se l'area non esiste.
      */
-    async deleteRestrictedArea(areaId: string): Promise<void> {
+    async deleteRestrictedArea(areaId: ObjectId): Promise<void> {
         const existingArea = await this.restrictedAreaRepository.findAreaById(areaId);
         if (!existingArea) {
             throw this.errorFactory.getError(ErrEnum.RestrictedAreaNotFound);
@@ -82,7 +83,7 @@ export class RestrictedAreaService {
      * @returns L'area trovata.
      * @throws Eccezione se l'area non esiste.
      */
-    async getRestrictedAreaById(areaId: string): Promise<IRestrictedArea> {
+    async getRestrictedAreaById(areaId: ObjectId): Promise<IRestrictedArea> {
         const area = await this.restrictedAreaRepository.findAreaById(areaId);
         if (!area) {
             throw this.errorFactory.getError(ErrEnum.RestrictedAreaNotFound);

@@ -15,8 +15,8 @@ import { Waypoint } from "../types/waypoint";
  * - data di creazione.
  */
 export interface INavigationPlan {
-  id:string;
-  userId: string;
+  id:string | ObjectId;
+  userId: string | ObjectId;
   boatId: string;
   waypoints: Waypoint[];
   startDate: Date;
