@@ -1,4 +1,5 @@
-import { UserRole } from "../model/user.interface";
+import { UserRole } from "../enum/userRole";
+
 
 /**
  * Interfaccia `UserPayload`

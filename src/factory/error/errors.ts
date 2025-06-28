@@ -218,8 +218,22 @@ export class InvalidStartDateError implements ErrorResponse {
 export class PlanNotFoundError implements ErrorResponse {
     getErrorResponse(): { status: number, msg: string } {
         return {
-            status: StatusCodes.FORBIDDEN,
+            status: StatusCodes.NOT_FOUND,
             msg: ErrorMessages.PLAN_NOT_FOUND
+        };
+    }
+
+}
+
+/**
+ * Errore utente non ha abbastanza token
+ */
+
+export class PlansNotFoundError implements ErrorResponse {
+    getErrorResponse(): { status: number, msg: string } {
+        return {
+            status: StatusCodes.NOT_FOUND,
+            msg: ErrorMessages.NO_NAVIGATION_PLANS_FOUND
         };
     }
 
@@ -238,6 +252,19 @@ export class PlanNotUpdateStatus implements ErrorResponse {
     }
 
 }
+/**
+ * Errore utente non ha abbastanza token
+ */
+
+export class PlanNotEditableStatus implements ErrorResponse {
+    getErrorResponse(): { status: number, msg: string } {
+        return {
+            status: StatusCodes.CONFLICT,
+            msg: ErrorMessages.PLAN_STATUS_NOT_EDITABLE
+        };
+    }
+
+}
 
 /**
  * Errore utente non ha abbastanza token
@@ -252,6 +279,21 @@ export class RouteRestrictedError implements ErrorResponse {
     }
 
 }
+
+/**
+ * Errore utente non ha abbastanza token
+ */
+
+export class RestricreAreasNotFoundError implements ErrorResponse {
+    getErrorResponse(): { status: number, msg: string } {
+        return {
+            status: StatusCodes.FORBIDDEN,
+            msg: ErrorMessages.ROUTE_RESTRICTED
+        };
+    }
+
+}
+
 
 /**
  * Errore utente non ha abbastanza token
@@ -323,7 +365,7 @@ export class InavalidRestrictedArea implements ErrorResponse {
     getErrorResponse(): { status: number, msg: string } {
         return {
             status: StatusCodes.BAD_REQUEST,
-            msg: ErrorMessages.INVALID_CREDENTIALS
+            msg: ErrorMessages.RESTRICTED_AREA_ALREADY_EXISTS
         };
     }
 

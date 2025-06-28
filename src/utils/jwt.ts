@@ -2,12 +2,7 @@ import jwt from 'jsonwebtoken';
 import path from 'path';
 import { UserPayload } from '../types/user_payload';
 import * as fs from 'fs';
-
-// === Caricamento della chiave privata ===
-// La chiave privata RSA è utilizzata per firmare il token in modo asimmetrico.
-// Il path viene letto da una variabile d'ambiente (`JWT_PRIVATE_KEY`) per motivi di sicurezza.
-// L'encoding 'utf8' garantisce che la chiave venga letta come stringa.
-const privateKey = fs.readFileSync(path.resolve(process.env.JWT_PRIVATE_KEY!), 'utf8');
+import { keyManager } from '../config/keyManager';
 
 /**
  * Funzione `generateToken`
@@ -22,10 +17,24 @@ const privateKey = fs.readFileSync(path.resolve(process.env.JWT_PRIVATE_KEY!), '
  * const token = generateToken({ id: user.id, role: user.role });
  */
 
-export function generateToken(payload: UserPayload): string {
-  return jwt.sign(payload, privateKey, {
-    algorithm: 'RS256',   // Firma con algoritmo RSA SHA-256
-    expiresIn: '1h',      // Token valido per 1 ora
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN ?? "1h";
+
+/**
+ * Firma un nuovo JWT con la chiave privata RSA.
+ */
+export function signJwt(payload: UserPayload): string {
+  return jwt.sign(payload, keyManager.privateKey, {
+    algorithm: "RS256",
+    expiresIn: JWT_EXPIRES_IN as jwt.SignOptions["expiresIn"]
+  
   });
 }
 
+/**
+ * Verifica un JWT e restituisce il payload se valido.
+ */
+export function verifyJwt<T>(token: string): T {
+  return jwt.verify(token, keyManager.publicKey, {
+    algorithms: ["RS256"]
+  }) as T;
+}

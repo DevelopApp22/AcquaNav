@@ -2,7 +2,7 @@ import { ErrEnum } from "../factory/error/error_enum";
 import { ErrorFactory } from "../factory/error/error_factory";
 import { UserRepository } from "../repository/user_repository";
 import { comparePassword } from "../utils/password";
-import { generateToken } from "../utils/jwt";
+import { signJwt } from "../utils/jwt";
 
 /**
  * Classe `AuthService`
@@ -10,6 +10,7 @@ import { generateToken } from "../utils/jwt";
  * Responsabile della logica di autenticazione utente. Valida le credenziali
  * e genera un JWT se l'autenticazione ha successo.
  */
+
 export class AuthService {
   constructor(private userRepository: UserRepository) {}
 
@@ -47,7 +48,7 @@ export class AuthService {
     };
 
     // Genera e restituisce il token
-    const token = generateToken(userPayload);
+    const token = signJwt(userPayload);
     return token;
   }
 }

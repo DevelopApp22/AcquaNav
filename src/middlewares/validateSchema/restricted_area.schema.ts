@@ -4,5 +4,5 @@ import { waypointSchema } from "./navigationPlan.schema";
 
 export const restrictedAreaSchema = z.object({
     topLeft: waypointSchema,
-    bottomLeft: waypointSchema,
+    bottomRight: waypointSchema,
 }).strict();

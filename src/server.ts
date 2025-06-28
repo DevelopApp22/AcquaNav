@@ -1,6 +1,5 @@
-
 import app from './app';
-import MongoDB from "./db/mangoDb";
+import MongoDB from "./db/mongoDb";
 
 // Recupera la porta da variabili d'ambiente, oppure usa 3000 come default
 const PORT = process.env.APP_PORT;
@@ -14,13 +13,11 @@ async function startServer() {
     //  Connessione a MongoDB (singleton)
     await MongoDB.getInstance();
 
-    //Una volta connessi, avvia il server Express in ascolto sulla porta specificata
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
     });
 
   } catch (err) {
-    // Se la connessione al DB fallisce, stampa un messaggio di errore
     console.error("Errore nella connessione a MongoDB:", err);
   }
 }

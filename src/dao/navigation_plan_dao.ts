@@ -4,9 +4,11 @@ import { NavigationPlan } from "../model/schema/navigationPlan_model";
 import { INavigationPlanQuery } from "../types/navigationPlanQuery";
 
 /**
+ * Classe `NavigationPlanDao`
+ *
  * Implementazione concreta del DAO (Data Access Object) per la gestione
  * dei piani di navigazione. Fornisce metodi CRUD e query personalizzate
- * usando Mongoose.
+ * utilizzando Mongoose.
  */
 
 export class NavigationPlanDao implements IDao<INavigationPlan> {
@@ -15,59 +17,61 @@ export class NavigationPlanDao implements IDao<INavigationPlan> {
 
     /**
      * Crea un nuovo piano di navigazione nel database.
-     * @param item Oggetto `INavigationPlan` da salvare.
-     * @returns Il piano di navigazione appena creato.
+     * @param navigationPlan Oggetto `INavigationPlan` da salvare.
+     * @returns Il piano di navigazione creato.
      */
-    async create(item: INavigationPlan): Promise<INavigationPlan> {
-        const navigatio_plan : INavigationPlan = await NavigationPlan.create(item);
-        return navigatio_plan;
+    async create(navigationPlan: INavigationPlan): Promise<INavigationPlan> {
+        return await NavigationPlan.create(navigationPlan);
     }
 
     /**
-     * Recupera un piano di navigazione in base al suo ID.
-     * @param id Identificativo univoco del piano.
-     * @returns Il piano trovato oppure `null` se non esiste.
+     * Recupera un piano di navigazione tramite identificativo univoco.
+     * @param planId Identificativo univoco del piano.
+     * @returns Il piano trovato, oppure `null` se non esiste.
      */
-    async getbyID(id: string): Promise<INavigationPlan | null> {
-        const navigatio_plan  : INavigationPlan|null = await NavigationPlan.findById(id);
-        return navigatio_plan;
+    async getbyID(planId: string): Promise<INavigationPlan | null> {
+        return await NavigationPlan.findById(planId);
     }
 
     /**
-     * Recupera tutti i piani di navigazione presenti nel database.
-     * @returns Array contenente tutti i piani.
+     * Recupera l'elenco completo dei piani di navigazione.
+     * @returns Array di piani di navigazione.
      */
     async getAll(): Promise<INavigationPlan[]> {
-        const navigatio_plan : INavigationPlan[] = await NavigationPlan.find();
-        return navigatio_plan;
+        return await NavigationPlan.find();
     }
 
     /**
      * Aggiorna parzialmente un piano di navigazione tramite il suo ID.
-     * @param id ID del piano da aggiornare.
-     * @param item Oggetto contenente solo i campi da modificare.
-     * @returns Il piano aggiornato oppure `null` se non trovato.
+     * @param planId Identificativo del piano da aggiornare.
+     * @param updatedFields Oggetto contenente i campi da aggiornare.
+     * @returns Il piano aggiornato, oppure `null` se non trovato.
      */
-    async update(id: string, item: Partial<INavigationPlan>): Promise<INavigationPlan | null> {
-        const navigation_plan : INavigationPlan|null = await NavigationPlan.findByIdAndUpdate(id, item, { new: true });
-        return navigation_plan;
+    async update(planId: string, updatedFields: Partial<INavigationPlan>): Promise<INavigationPlan | null> {
+        return await NavigationPlan.findByIdAndUpdate(
+            planId, 
+            updatedFields, 
+            { 
+                new: true,
+                runValidators: true 
+            }
+        );
     }
 
     /**
      * Elimina un piano di navigazione dal database.
-     * @param id ID del piano da eliminare.
+     * @param planId Identificativo del piano da eliminare.
      */
-    async delete(id: string): Promise<void> {
-        await NavigationPlan.findByIdAndDelete(id);
+    async delete(planId: string): Promise<void> {
+        await NavigationPlan.findByIdAndDelete(planId);
     }
 
     /**
-     * Recupera i piani di navigazione filtrati in base a una query personalizzata.
-     * @param query Oggetto che rappresenta i criteri di filtro (es. stato, date).
-     * @returns Lista dei piani che soddisfano i criteri.
+     * Recupera i piani di navigazione filtrati secondo una query personalizzata.
+     * @param filterQuery Oggetto con i criteri di filtro (es. stato, date, utente).
+     * @returns Array di piani che soddisfano i criteri di ricerca.
      */
-    async findFilteredPlans(query: INavigationPlanQuery): Promise<INavigationPlan[]> {
-        const navigatio_plan : INavigationPlan[]= await NavigationPlan.find(query);
-        return navigatio_plan;
+    async findFilteredPlans(filterQuery: INavigationPlanQuery): Promise<INavigationPlan[]> {
+        return await NavigationPlan.find(filterQuery);
     }
 }

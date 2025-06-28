@@ -22,11 +22,12 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_DB_NAME: ${MONGO_DB_NAME}
     volumes:
-      - mongodb_data:/data/db
-
+      - mongodb_data:/var/lib/mongodb/data
+      - ./src/db/seed:/docker-entrypoint-initdb.d
+  
     restart: always
 
 volumes:
-  ignore :
   mongodb_data:

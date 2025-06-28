@@ -97,6 +97,15 @@ export class ErrorFactory {
             case ErrEnum.RestrictedAreaAlreadyExists:
                 retval = new Errors.InavalidRestrictedArea();
                 break;
+            case ErrEnum.NoNavigationPlansFound:
+                retval = new Errors.PlansNotFoundError();
+                break;
+            case ErrEnum.NoRestrictedAreasFound:
+                retval = new Errors.RestricreAreasNotFoundError();
+                break;
+             case ErrEnum.PlanNotEditableStatus:
+                retval = new Errors.PlanNotEditableStatus();
+                break;
             default:
                 retval = new Errors.InternalServerError();
                 break;

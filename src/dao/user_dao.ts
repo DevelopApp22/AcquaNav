@@ -6,73 +6,69 @@ import { IDao } from "./idao.interface";
  * Classe `UserDao`
  *
  * Implementa l'interfaccia generica `IDao` per la gestione degli utenti (`IUser`).
- * Fornisce operazioni CRUD per interagire con il modello `User` salvato in MongoDB tramite Mongoose.
- *
+ * Fornisce operazioni CRUD per interagire con la collezione `User` su MongoDB tramite Mongoose.
  */
-
-
 export class UserDao implements IDao<IUser> {
 
     constructor() {}
 
     /**
      * Crea un nuovo utente nel database.
-     * @param item Oggetto `IUser` contenente i dati dell'utente da salvare.
+     * @param user Oggetto `IUser` contenente i dati dell'utente da salvare.
      * @returns L'utente creato.
      */
-    async create(item: IUser): Promise<IUser> {
-        const user : IUser = await User.create(item);
-        return user;
+    async create(user: IUser): Promise<IUser> {
+        return await User.create(user);
     }
 
     /**
-     * Recupera un utente a partire dal suo identificativo univoco.
-     * @param id ID MongoDB dell'utente.
-     * @returns L'utente corrispondente oppure `null` se non trovato.
+     * Recupera un utente tramite il proprio ID.
+     * @param userId Identificativo univoco (MongoDB ObjectId) dell'utente.
+     * @returns L'utente trovato, oppure `null` se non esiste.
      */
-    async getbyID(id: string): Promise<IUser | null> {
-        const user  = await User.findById(id);
-        return user;
+    async getbyID(userId: string): Promise<IUser | null> {
+        return await User.findById(userId);
     }
 
-     /**
-     * Recupera un utente a partire dalla sua email .
-     * @param email ID MongoDB dell'utente.
-     * @returns L'utente corrispondente oppure `null` se non trovato.
+    /**
+     * Recupera un utente tramite indirizzo email.
+     * @param email Indirizzo email dell'utente.
+     * @returns L'utente trovato, oppure `null` se non esiste.
      */
     async getbyEmail(email: string): Promise<IUser | null> {
-        const user :IUser | null = await User.findOne({email:email});
-        return user;
+        return await User.findOne({ email });
     }
 
     /**
-     * Restituisce tutti gli utenti presenti nel database.
-     * @returns Array di oggetti `IUser`.
+     * Restituisce l'elenco completo degli utenti.
+     * @returns Array di utenti presenti nel database.
      */
     async getAll(): Promise<IUser[]> {
-        const users  = await User.find();
-        return users;
+        return await User.find();
     }
 
     /**
-     * Aggiorna un utente esistente in base all'ID fornito.
-     * @param id ID dell'utente da aggiornare.
-     * @param item Oggetto parziale contenente i campi da modificare.
-     * @returns L'utente aggiornato oppure `null` se non esistente.
+     * Aggiorna i dati di un utente esistente.
+     * @param userId Identificativo univoco dell'utente da aggiornare.
+     * @param updatedFields Oggetto parziale contenente i campi da aggiornare.
+     * @returns L'utente aggiornato, oppure `null` se non trovato.
      */
-    async update(id: string, item: Partial<IUser>): Promise<IUser | null> {
-        const updatedUser = await User.findByIdAndUpdate(id, item,{
-        new: true, // ritorna il documento aggiornato
-        runValidators: true, // esegue le validazioni dello schema
-    });
-        return updatedUser;
+    async update(userId: string, updatedFields: Partial<IUser>): Promise<IUser | null> {
+        return await User.findByIdAndUpdate(
+            userId, 
+            updatedFields, 
+            {
+                new: true,           // ritorna il documento aggiornato
+                runValidators: true  // applica le validazioni dello schema
+            }
+        );
     }
 
     /**
-     * Elimina un utente dal database in base all'identificativo.
-     * @param id ID dell'utente da rimuovere.
+     * Elimina un utente dal database.
+     * @param userId Identificativo univoco dell'utente da eliminare.
      */
-    async delete(id: string): Promise<void> {
-        await User.findByIdAndDelete(id);
+    async delete(userId: string): Promise<void> {
+        await User.findByIdAndDelete(userId);
     }
 }

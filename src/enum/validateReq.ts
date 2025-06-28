@@ -1,5 +1,5 @@
 export enum ValidateReq{
     BODY = "body",
-    REQUEST = "query",
+    QUERY = "query",
     PARAMS = "params"
 }

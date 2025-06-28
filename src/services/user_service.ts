@@ -1,24 +1,55 @@
 import { UserRepository } from "../repository/user_repository";
 import {ErrorFactory} from "../factory/error/error_factory"
 import { ErrEnum } from "../factory/error/error_enum";
-import { IUser, UserRole } from "../model/user.interface";
+import { UserRole } from "../enum/userRole";
+import { IUser } from "../model/user.interface";
 
+/**
+ * Classe `UserService`
+ *
+ * Contiene la logica di business per la gestione degli utenti.
+ * Si interfaccia con il livello repository per l'accesso ai dati e
+ * gestisce validazioni e regole applicative.
+ */
 export class UserService {
-    constructor(private userRespository: UserRepository) {
+
+    private errorFactory: ErrorFactory;
+
+    /**
+     * Costruttore del servizio utenti.
+     * @param userRepository Repository per la gestione utenti.
+     */
+    constructor(private userRepository: UserRepository) {
+        this.errorFactory = new ErrorFactory();
     }
 
-    async updateUser(userId:string,item: Partial<IUser>): Promise<IUser | null> {
-        const error_factory=new ErrorFactory()
-        const user = await this.userRespository.getUserById(userId)
-        if(!user ){
-           throw error_factory.getError(ErrEnum.UserNotFound)
+    /**
+     * Aggiorna il numero di token per un determinato utente.
+     * Applica regole di validazione sul ruolo e sui dati esistenti.
+     * 
+     * @param userId Identificativo dell'utente.
+     * @param tokensToAdd Numero di token da aggiungere.
+     * @returns L'utente aggiornato.
+     * @throws Eccezioni in caso di utente non trovato o ruolo non autorizzato.
+     */
+    async updateUserTokens(userId: string, tokensToAdd: number): Promise<IUser | null> {
+        
+        const user = await this.userRepository.getUserById(userId);
+
+        if (!user) {
+            throw this.errorFactory.getError(ErrEnum.UserNotFound);
         }
-        if(user.role === UserRole.OPERATOR || user.role === UserRole.ADMIN){
-            throw error_factory.getError(ErrEnum.ForbiddenRole)
+
+        // Verifica che il ruolo sia valido per l'operazione
+        if (user.role === UserRole.OPERATOR || user.role === UserRole.ADMIN) {
+            throw this.errorFactory.getError(ErrEnum.ForbiddenRole);
         }
-        const user_token= (user.tokens ?? 0) +(item.tokens??0)
-        return await this.userRespository.updateUser(userId,{tokens:user_token}) 
+
+        // Inizializza i token se null o undefined
+        const currentTokens = user.tokens ?? 0;
+        const updatedTokens = currentTokens + tokensToAdd;
+
+        const updatedUser = await this.userRepository.updateUser(userId, { tokens: updatedTokens });
+        return updatedUser;
     }
-
-
 }

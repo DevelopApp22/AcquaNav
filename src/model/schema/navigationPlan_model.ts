@@ -1,6 +1,7 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 
-import { INavigationPlan, StatusNavigation } from "../navigationPlan.interface";
+import { INavigationPlan } from "../navigationPlan.interface";
+import { StatusNavigation } from "../../enum/statusNavigation";
 
 /**
  * Schema `NavigationPlanSchema`
@@ -15,16 +16,17 @@ import { INavigationPlan, StatusNavigation } from "../navigationPlan.interface";
  * - motivo di rifiuto opzionale (`rejectionReason`)
  * - data di creazione (`createdAt`)
  */
+
 const NavigationPlanSchema = new Schema<INavigationPlan>({
   userId: {
-    type: String,
-    ref: 'User',        // riferimento al documento utente
+    type: String, 
+    ref: 'User',
     required: true
   },
   boatId: {
     type: String,
     required: true,
-    minlength: 10,      // codice barca di 10 caratteri precisi
+    minlength: 10,
     maxlength: 10
   },
   waypoints: {
@@ -32,7 +34,7 @@ const NavigationPlanSchema = new Schema<INavigationPlan>({
       {
         lon: { type: Number, required: true },
         lat: { type: Number, required: true },
-        _id: false, 
+        _id: false
       },
     ],
     required: true,
@@ -40,20 +42,14 @@ const NavigationPlanSchema = new Schema<INavigationPlan>({
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   status: {
-    type: Schema.Types.String,
-    enum:  Object.values(StatusNavigation),
+    type: String,
+    enum: Object.values(StatusNavigation),
     default: StatusNavigation.PENDING,
-    required:true
+    required: true
   },
-  rejectionReason: { type: String },  // motivazione visibile solo se rejected
-});
+  rejectionReason: { type: String }
+}, { versionKey: false });
 
-/**
- * Indice composito su `user` e `status`
- *
- * Serve per ottimizzare le query che filtrano i piani per utente e stato (es. richieste utente o operatore).
- */
-NavigationPlanSchema.index({ user: 1, status: 1 });
 
 /**
  * Esportazione del modello `NavigationPlan`

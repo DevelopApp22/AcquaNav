@@ -43,13 +43,16 @@ export const ErrorMessages = {
 
   RESTRICTED_AREA_NOT_FOUND: "ERROR - Restricted area not found",
   RESTRICTED_AREA_ALREADY_EXISTS: "ERROR - A restricted area with the same coordinates already exists",
-
+  NO_RESTRICTED_AREAS_FOUND: "ERROR - No restricted areas found",
+  
   INVALID_START_DATE: "ERROR - The start date must be at least 48 hours in the future",
   ROUTE_RESTRICTED: "ERROR - The selected route passes through a restricted or prohibited area",
 
   PLAN_NOT_FOUND: "ERROR - Navigation plan  not found",
+  NO_NAVIGATION_PLANS_FOUND: "ERROR - No navigation plans found",
   CANNOT_CANCEL_PLAN: "ERROR - The navigation plan cannot be cancelled at its current state",
   PLAN_ALREADY_CANCELLED: "ERROR - The navigation plan cannot be modified because it has been cancelled",
+  PLAN_STATUS_NOT_EDITABLE: "ERROR - The navigation plan cannot be modified in its current status",
   
   INVALID_OBJECT_ID_FORMAT: "ERROR - Provided ID is not in a valid ObjectId format",
   INVALID_DATE_FORMAT: "ERROR - Date must be in ISO 8601 format (e.g., 2025-06-13T15:30:00Z)",

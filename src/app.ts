@@ -13,6 +13,7 @@ const app = express();
 // Load environment variables from .env file
 dotenv.config();
 app.use(express.json());
+
 app.use("/api", navigatioPlanRoutes);
 app.use("/api", userRoutes);
 app.use("/api", restrictedAreaRoutes);

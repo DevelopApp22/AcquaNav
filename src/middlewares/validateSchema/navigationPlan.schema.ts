@@ -1,16 +1,28 @@
 import { z } from "zod";
 import { ErrorMessages } from "../../factory/error/errorMessages";
 import { addHours, isAfter } from "date-fns";
+import { DateTime } from 'luxon';
+
 
 /**
- * Schema `isoDateString`
- *
- * Valida che la stringa sia una data valida in formato ISO 8601.
- * Esempio valido: `'2025-06-01T00:00:00Z'`
+ * Schema isoDateString 
+ * Validare una stringa in formato ISO 8601.
+ * La validazione utilizza Luxon per verificare che la stringa rappresenti una data valida.
  */
-export const isoDateString = z.string().refine(val => !isNaN(Date.parse(val)), {
-  message: ErrorMessages.INVALID_DATE_FORMAT,
+export const isoDateString = z.string().refine(val => {
+  // Tenta di effettuare il parsing della stringa come data ISO 8601
+  const dt = DateTime.fromISO(val, { setZone: true });
+
+  // Restituisce true se la stringa rappresenta una data valida secondo Luxon
+  return dt.isValid;
+}, {
+  // Messaggio di errore restituito da Zod se la validazione fallisce
+  message: 'Formato data non valido (ISO 8601 richiesto)',
 });
+
+
+
+
 
 /**
  * Schema `waypointSchema`

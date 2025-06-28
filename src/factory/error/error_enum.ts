@@ -23,5 +23,9 @@ export enum ErrEnum {
     ForbiddenRole,
     RestrictedAreaNotFound,
     InvalidCredenzial,
-    RestrictedAreaAlreadyExists
+    RestrictedAreaAlreadyExists,
+    NoNavigationPlansFound,
+    NoRestrictedAreasFound,
+    PlanNotEditableStatus,
+
 }

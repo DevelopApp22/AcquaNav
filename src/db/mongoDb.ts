@@ -26,16 +26,15 @@ class MongoDB {
    */
   public static async getInstance(): Promise<MongoDB> {
     if (!MongoDB.instance) {
-    const MONGO_URI = `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/mydatabase?authSource=admin`;
+    const MONGO_URI = `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB_NAME}?authSource=admin`;
       try {
         // Effettua la connessione con il database specificato
-        await mongoose.connect(MONGO_URI,{
-          dbName:process.env.MONGO_DB_NAME
-        });
+        await mongoose.connect(MONGO_URI);
         console.log(" Connessione al DB effettuata");
-        
+
         // Salva l'istanza del singleton dopo la connessione
         MongoDB.instance = new MongoDB();
+        
       } catch (error) {
         console.error("Connessione al DB non riuscita:", error);
         throw error;

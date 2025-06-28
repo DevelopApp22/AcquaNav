@@ -13,5 +13,5 @@ COPY . .
 # Expose app port
 EXPOSE 3000
 
-# Start in dev mode with hot reload
+# Start in dev mode with hot reload else in start mode
 CMD ["npm", "run", "dev"]

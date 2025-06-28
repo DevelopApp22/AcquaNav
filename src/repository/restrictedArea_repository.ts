@@ -5,44 +5,48 @@ import { Waypoint } from "../types/waypoint";
 /**
  * Classe `RestrictedAreaRepository`
  *
- * Rappresenta il livello di astrazione tra il DAO (`RestrictedAreaDao`) e il resto dell'applicazione.
+ * Repository che funge da livello di astrazione tra il DAO (`RestrictedAreaDao`) e il resto dell'applicazione.
  * Espone i metodi principali per la gestione delle aree geografiche ristrette, delegando le operazioni
- * di accesso al database al rispettivo DAO.
- *
+ * di persistenza al DAO.
  */
-
 export class RestrictedAreaRepository {
+
+  /**
+   * Inizializza il repository con un'istanza di DAO.
+   * @param restrictedAreaDao DAO per la gestione della persistenza delle aree ristrette.
+   */
   constructor(private restrictedAreaDao: RestrictedAreaDao) {}
 
   /**
-   * Registra una nuova area ristretta nel sistema.
-   * @param areaData Dati dell'area da creare.
-   * @returns L'area creata.
+   * Crea e registra una nuova area ristretta.
+   * @param restrictedArea Oggetto contenente i dati della nuova area.
+   * @returns L'istanza dell'area ristretta creata.
    */
-  async createArea(areaData: IRestrictedArea): Promise<IRestrictedArea> {
-    return this.restrictedAreaDao.create(areaData);
+  async createArea(restrictedArea: IRestrictedArea): Promise<IRestrictedArea> {
+    return await this.restrictedAreaDao.create(restrictedArea);
   }
 
   /**
-   * Trova un'area ristretta tramite ID univoco.
-   * @param areaId Identificativo dell'area.
-   * @returns L'area trovata oppure `null` se non esiste.
+   * Recupera un'area ristretta tramite ID univoco.
+   * @param restrictedAreaId Identificativo univoco dell'area.
+   * @returns L'area trovata, oppure `null` se non esiste.
    */
-  async findAreaById(areaId: string): Promise<IRestrictedArea | null> {
-    return await this.restrictedAreaDao.getbyID(areaId);
+  async findAreaById(restrictedAreaId: string): Promise<IRestrictedArea | null> {
+    return await this.restrictedAreaDao.getbyID(restrictedAreaId);
   }
 
   /**
-   * Trova un'area ristretta tramite ID univoco.
-   * @param areaId Identificativo dell'area.
-   * @returns L'area trovata oppure `null` se non esiste.
+   * Cerca un'area ristretta che contenga il rettangolo definito da due waypoint.
+   * @param topLeft Waypoint superiore sinistro.
+   * @param bottomRight Waypoint inferiore destro.
+   * @returns L'area trovata, oppure `null` se non esiste.
    */
-  async findAreaByWaypoint(topLeft:Waypoint,bottomRight:Waypoint): Promise<IRestrictedArea | null> {
-    return await this.restrictedAreaDao.getbyWaypoint(topLeft,bottomRight);
+  async findAreaByWaypoint(topLeft: Waypoint, bottomRight: Waypoint): Promise<IRestrictedArea | null> {
+    return await this.restrictedAreaDao.getbyWaypoint(topLeft, bottomRight);
   }
 
   /**
-   * Restituisce tutte le aree ristrette presenti nel database.
+   * Restituisce tutte le aree ristrette presenti nel sistema.
    * @returns Array di oggetti `IRestrictedArea`.
    */
   async listAllAreas(): Promise<IRestrictedArea[]> {
@@ -50,20 +54,20 @@ export class RestrictedAreaRepository {
   }
 
   /**
-   * Aggiorna i dati di un'area esistente.
-   * @param areaId Identificativo dell'area da modificare.
-   * @param updatedData Campi aggiornati dell'area.
-   * @returns L'area aggiornata oppure `null` se non trovata.
+   * Aggiorna una specifica area ristretta.
+   * @param restrictedAreaId Identificativo univoco dell'area da aggiornare.
+   * @param restrictedArea Dati aggiornati (parziali) dell'area.
+   * @returns L'area aggiornata, oppure `null` se non trovata.
    */
-  async updateArea(areaId: string, updatedData: Partial<IRestrictedArea>): Promise<IRestrictedArea | null> {
-    return await this.restrictedAreaDao.update(areaId, updatedData);
+  async updateArea(restrictedAreaId: string, restrictedArea: Partial<IRestrictedArea>): Promise<IRestrictedArea | null> {
+    return await this.restrictedAreaDao.update(restrictedAreaId, restrictedArea);
   }
 
   /**
-   * Rimuove un'area ristretta dal sistema.
-   * @param areaId ID dell'area da eliminare.
+   * Elimina un'area ristretta dal sistema.
+   * @param restrictedAreaId Identificativo univoco dell'area da eliminare.
    */
-  async removeArea(areaId: string): Promise<void> {
-    await await this.restrictedAreaDao.delete(areaId);
+  async removeArea(restrictedAreaId: string): Promise<void> {
+    await this.restrictedAreaDao.delete(restrictedAreaId);
   }
 }

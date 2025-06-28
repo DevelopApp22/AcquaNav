@@ -12,7 +12,7 @@ const SALT_ROUNDS = 10; // Numero di cicli di salt per rafforzare la sicurezza d
  * @returns La stringa hash generata in modo asincrono
  *
  */
-export async function hashPassword(password: string): Promise<string> {
+export  async function hashPassword(password: string): Promise<string> {
   return await bcrypt.hash(password, SALT_ROUNDS);
 }
 

@@ -2,35 +2,8 @@
 import { Request, Response, NextFunction } from "express";
 import { ErrorFactory } from "../factory/error/error_factory";
 import { ErrEnum } from "../factory/error/error_enum";
-import { getFilterNavigationSchema } from "./validateSchema/filterNavigationPlan.schema";
-import z, {ZodSchema } from "zod";
+import {ZodSchema } from "zod";
 import { ValidateReq } from "../enum/validateReq";
-
-
-
-/**
- * Middleware `validateFilterNavigationPlan`
- *
- * Valida i parametri di query (`req.query`) in base al ruolo dell’utente,
- * usando uno schema dinamico generato da `getFilterNavigationSchema`.
- */
-export const validateFilterNavigationPlan = (req: Request, res: Response, next: NextFunction) => {
-  const schema = getFilterNavigationSchema(req.user.role);
-  const parsed = schema.safeParse(req.query);
-
-  if (!parsed.success) {
-    const errors = parsed.error.errors.map(err => ({
-      field: err.path.join("."),
-      message: err.message,
-    }));
-    console.log("Validation failed:", errors);
-
-    const errorFactory = new ErrorFactory();
-    return next(errorFactory.getError(ErrEnum.BadRequest));
-  }
-
-  next();
-};
 
 
 /**

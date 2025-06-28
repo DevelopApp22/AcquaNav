@@ -1,5 +1,9 @@
 import { NextFunction, Response } from 'express';
 import { Request} from "express";
+
+import { ErrEnum } from '../factory/error/error_enum';
+import { ErrorFactory } from '../factory/error/error_factory';
+import { StatusCodes } from 'http-status-codes';
 /**
  * Middleware `errorHandler`
  *
@@ -14,11 +18,30 @@ import { Request} from "express";
  * @param res Risposta HTTP
  * @param next Funzione per il middleware successivo (non usata qui)
  */
-const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-   const error= err.getErrorResponse()
-   res.status(error.status).json({
-    error: error.msg,
-  });
+const errorHandler = (err: Error | ErrorResponse, req: Request, res: Response, next: NextFunction) => {
+    
+    let statusCode: StatusCodes;
+    let message: string;
+    const errorFactory = new ErrorFactory
+
+    if (err instanceof Error) {
+        console.error(err); // in produzione sostituire con logger centralizzato
+        const internalError = errorFactory.getError(ErrEnum.InternalServerError)
+        const error = internalError.getErrorResponse();
+        statusCode = error.status;
+        message = error.msg;
+    }
+
+    else {
+      const error = err.getErrorResponse();
+      statusCode=error.status;
+      message=error.msg;
+    }
+
+    // Restituisce la risposta HTTP uniforme
+    res.status(statusCode).json({
+        error: message,
+    });
 };
 
 export default errorHandler;

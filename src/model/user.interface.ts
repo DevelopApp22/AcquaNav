@@ -1,18 +1,4 @@
 /**
- * Enum `UserRole`
- *
- * Definisce i ruoli consentiti nel sistema:
- * - USER: utente standard che può inviare richieste di piani di navigazione.
- * - OPERATOR: operatore autorizzato a gestire le richieste e le aree vietate.
- * - ADMIN: amministratore con privilegi estesi (es. ricarica dei token).
- */
-export enum UserRole {
-  USER = 'user',
-  OPERATOR = 'operator',
-  ADMIN = 'admin',
-}
-
-/**
  * Interfaccia `IUser`
  *
  * Rappresenta la struttura logica di un utente nel sistema.
@@ -21,6 +7,9 @@ export enum UserRole {
  * @property role   Il ruolo dell'utente: può essere 'user', 'operator' o 'admin'.
  * @property tokens Il numero di token posseduti dall'utente, utilizzati per pagare le richieste.
  */
+
+import { ObjectId } from "mongoose";
+import { UserRole } from "../enum/userRole";
 
 export interface IUser{
   id:string,

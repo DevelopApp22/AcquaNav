@@ -8,13 +8,15 @@ import { NavigationPlanService } from '../services/navigationPlan_service';
 import { RestrictedAreaDao } from '../dao/restricted_area_dao';
 import { RestrictedAreaRepository } from '../repository/restrictedArea_repository';
 import { NavigationPlanController } from '../controllers/navigation_plan_controllers';
-import {validateFilterNavigationPlan, validateWithSchema } from '../middlewares/validate';
+import {validateWithSchema } from '../middlewares/validate';
 import { Auth } from '../middlewares/middlware_chain';
-import { UserRole } from '../model/user.interface';
+
 import { objectIdSchema } from '../middlewares/validateSchema/objectId.schema';
 import { navigationPlanSchema } from '../middlewares/validateSchema/navigationPlan.schema';
 import { ValidateReq } from "../enum/validateReq";
 import { rejectedNavigationPlan } from '../middlewares/validateSchema/rejetedNavigationPlan.schema';
+import { UserRole } from '../enum/userRole';
+import { filterNavigationSchema } from '../middlewares/validateSchema/filterNavigationPlan.schema';
 
 const router = Router();
 
@@ -29,15 +31,57 @@ const navigation_plan_repository= new NavigationPlanRepository(navigatio_plan_da
 const navigation_plan_service= new NavigationPlanService(navigation_plan_repository,user_repository,restricted_area_repository);
 const navigation_plan_controller= new NavigationPlanController(navigation_plan_service);
 
-router.get("/navigation-plans",Auth,authorizeRole(UserRole.OPERATOR,UserRole.USER),validateFilterNavigationPlan,navigation_plan_controller.getNavigationPlan)
 
-router.post("/navigation-plans",Auth,authorizeRole(UserRole.USER),validateWithSchema(navigationPlanSchema,ValidateReq.BODY),navigation_plan_controller.createNavigationPlan)
+// GET /navigation-plans
+// Recupera i piani di navigazione, filtrati dinamicamente in base al ruolo e ai query params
+router.get(
+  "/navigation-plans",
+  Auth,  // Middleware autenticazione JWT
+  authorizeRole(UserRole.OPERATOR, UserRole.USER), // Middleware autorizzazione ruoli
+  validateWithSchema(filterNavigationSchema,ValidateReq.QUERY), // Middleware di validazione query string (filtri di ricerca)
+  navigation_plan_controller.getNavigationPlan
+);
 
-router.delete("/navigation-plans/:id",Auth,authorizeRole(UserRole.USER),validateWithSchema(objectIdSchema,ValidateReq.PARAMS),navigation_plan_controller.deleteNavigationPlan)
+// POST /navigation-plans
+// Crea un nuovo piano di navigazione (solo utenti USER autorizzati)
+router.post(
+  "/navigation-plans",
+  Auth,
+  authorizeRole(UserRole.USER),
+  validateWithSchema(navigationPlanSchema, ValidateReq.BODY), // Validazione schema del body
+  navigation_plan_controller.createNavigationPlan
+);
 
-router.patch("/navigation-plans/:id/accepted",Auth,authorizeRole(UserRole.OPERATOR),validateWithSchema(objectIdSchema,ValidateReq.PARAMS),navigation_plan_controller.updateStusNavigationPlanAcceted)
+// PATCH /navigation-plans/:id/cancelled
+// Annulla (soft delete) un piano esistente, disponibile solo all’utente proprietario
+router.patch(
+  "/navigation-plans/:id/cancelled",
+  Auth,
+  authorizeRole(UserRole.USER),
+  validateWithSchema(objectIdSchema, ValidateReq.PARAMS), // Validazione id piano
+  navigation_plan_controller.deleteNavigationPlan
+);
 
-router.patch("/navigation-plans/:id/rejected",Auth,authorizeRole(UserRole.OPERATOR),validateWithSchema(objectIdSchema,ValidateReq.PARAMS),validateWithSchema(rejectedNavigationPlan,ValidateReq.BODY),navigation_plan_controller.updateStusNavigationPlanRejected)
+// PATCH /navigation-plans/:id/accepted
+// Approva un piano (solo per operatori)
+router.patch(
+  "/navigation-plans/:id/accepted",
+  Auth,
+  authorizeRole(UserRole.OPERATOR),
+  validateWithSchema(objectIdSchema, ValidateReq.PARAMS),
+  navigation_plan_controller.updateStatusNavigationPlanAccepted
+);
 
+// PATCH /navigation-plans/:id/rejected
+// Rifiuta un piano con motivazione (solo per operatori)
+router.patch(
+  "/navigation-plans/:id/rejected",
+  Auth,
+  authorizeRole(UserRole.OPERATOR),
+  validateWithSchema(objectIdSchema, ValidateReq.PARAMS),
+  validateWithSchema(rejectedNavigationPlan, ValidateReq.BODY), // Qui validiamo il body con il motivo del rifiuto
+  navigation_plan_controller.updateStatusNavigationPlanRejected
+);
 
-export default router
+// Esporta il router pronto per essere importato nell’applicazione principale
+export default router;

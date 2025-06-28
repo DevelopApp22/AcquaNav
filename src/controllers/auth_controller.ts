@@ -23,19 +23,8 @@ export class AuthController {
    * @param res Oggetto della risposta HTTP
    * @param next Funzione per propagare eventuali errori ai middleware di gestione errori
    * @returns JSON con il token JWT generato
-   *
-   * @example
-   * Request body:
-   * {
-   *   "email": "utente@example.com",
-   *   "password": "password123"
-   * }
-   *
-   * Response:
-   * {
-   *   "token": "eyJhbGciOiJSUzI1NiIsInR5cCI..."
-   * }
    */
+  
   loginUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const {email, password} = req.body;

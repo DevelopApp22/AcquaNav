@@ -14,31 +14,31 @@ Il progetto utilizza **Node.js**, **Express**, **TypeScript**, **MongoDB** e **M
 
 Indice 
 
-- [Descrizione](#descrizione-e-analisi)
-- [Analisi](#analisi-dei-requisiti)
-  - [Requisiti funzionali](#diagrammi-dei-casi-duso)
-  - [Requisiti non funzionali](#diagrammi-dei-casi-duso)
-  - [Attori](#diagrammi-dei-casi-duso)
-  - [Diagrammi dei Casi d'Uso](#diagrammi-dei-casi-duso)
-      - [Diagramma senza autenticazione ](#diagrammi-dei-casi-duso)
-      - [Diagrammi con autenticazione ](#diagrammi-dei-casi-duso)
+- [Descrizione](#descrizione)
+- [Analisi](#analisi)
+  - [Requisiti funzionali](#requisiti-funzionali)
+  - [Requisiti non funzionali](#requisiti-non-funzionali)
+   - [Diagrammi dei Casi d'Uso](#diagrammi-dei-casi-duso)
+      - [Attori](#attori)
+      - [Diagramma senza autenticazione ](#diagramma-senza-autenticazione)
+      - [Diagrammi con autenticazione ](#diagramma-con-autenticazione)
   - [Diagrammi delle sequenze ](#diagrammi-dei-casi-duso)
-      - [Diagramma delle sequenze visualizzazione aree vietate  ](#diagrammi-dei-casi-duso)
-      - [Diagramma delle sequenze login ](#diagrammi-dei-casi-duso)
-      - [Diagramma delle sequenze creazione Navigation Plan ](#diagrammi-dei-casi-duso)
-      - [Diagramma delle sequenze login ](#diagrammi-dei-casi-duso)
-      - [Diagramma delle sequenze login ](#diagrammi-dei-casi-duso)
-      - [Diagramma delle sequenze login ](#diagrammi-dei-casi-duso)
-      - [Diagramma delle sequenze login ](#diagrammi-dei-casi-duso)
-      - [Diagramma delle sequenze login ](#diagrammi-dei-casi-duso)
-      - [Diagramma delle sequenze login ](#diagrammi-dei-casi-duso)
-      - [Diagramma delle sequenze login ](#diagrammi-dei-casi-duso)
-
+      - [Login ](#login)
+      - [Visualizzazione navigationPlans ](#visualizzazione-NavigationPlans)
+      - [Creazione navigationPlans ](#creazione-NavigationPlan)
+      - [Cancellazione navigationPlans ](#cancellazione-navigationPlans)
+      - [Approvazione NavigationPlans ](#approvazione-navigationPlans)
+      - [Rifiuto NavigationPlans ](#rifiuto-NnvigationPlans)
+      - [Visualizzazione Aree Vietate ](#visualizzazione-aree-Vietate)
+      - [Creazione Aree Vieatata ](#creazione-aree-vieatata)
+      - [Modifica Aree Vieatata ](#modifica-aree-vieatata)
+      - [Eliminazione Aree Vieatata ](#eliminazione-Aree-Vieatata)
+      - [Ricarica token user](#ricarica-token-user)
 - [Progettazione Database](#progettazione-database)
 - [Pattern Utilizzati](#pattern-utilizzati)
 - [Struttura Progetto ](#pattern-utilizzati)
 - [Rotte](#pattern-utilizzati)
-- [Installazione ](#pattern-utilizzati)
+- [Istruzioni di configurazione e avvio ](#istruzioni-di-configurazione-e-avvio)
 
 ---
 
@@ -94,7 +94,7 @@ Il sistema definisce quattro ruoli principali, ciascuno con specifiche funzional
 Il sistema garantisce la sicurezza  dei dati attraverso un meccanismo di autenticazione e autorizzazione basato su **token JWT firmati con algoritmo RS256**, e gestisce la persistenza dei dati tramite **MongoDB** con l’ausilio di **Mongoose**.
 
 
-## Analisi Dei requisiti 
+## Analisi  
 A partire dall’analisi della descrizione , sono stati individuati i principali requisiti del sistema e i relativi casi d’uso. 
 
 I requisiti sono suddivisi in:
@@ -129,31 +129,98 @@ I requisiti sono suddivisi in:
 | RNF6 | Portabilità       | Il sistema è completamente containerizzato tramite **Docker**, facilitando il deploy su qualsiasi ambiente compatibile. |
 | RNF7 | Performance       | Le richieste sono gestite in modalità asincrona ed efficiente grazie all’utilizzo di **Node.js** ed **Express**. |
 
-### Diagrammi casi d'uso
+### Diagrammi dei  casi d'uso
 
 Il sistema per la gestione dei piani di navigazione dei droni marini autonomi coinvolge diversi attori che interagiscono con il sistema per svolgere specifiche funzionalità in base al proprio ruolo. Il diagramma dei casi d’uso rappresenta graficamente queste interazioni, illustrando le funzionalità principali a disposizione di ciascun attore.
 
-#### Attori
+### Attori
 <p align="center">
   <img src="images/attori.png" alt="Area Vietata" width="300"/>
 </p>
 <p align="center"><em>Attori</em></p>
 
-### Diagramma caso d'uso :  accesso pubblico e login
+### Diagramma senza autenticazione
 Il sistema espone alcune rotte accessibili senza autenticazione e una funzionalità di login che consente agli utenti di ottenere le credenziali per accedere ai casi d’uso protetti. In particolare, l’attore Guest può interagire solo con le rotte pubbliche, senza necessità di autenticazione, mentre gli attori User, Operator e Admin devono effettuare il login per ottenere il token JWT che consente loro di accedere alle funzionalità specifiche previste dal proprio ruolo. Il diagramma dei casi d’uso rappresenta queste interazioni distinguendo chiaramente le operazioni pubbliche disponibili per tutti gli utenti e il processo di autenticazione necessario per accedere ai casi d’uso riservati
 <p align="center">
   <img src="images/Publiche.png" alt="Area Vietata" width="700"/>
 </p>
 <p align="center"><em></em></p>
 
-### Diagramma caso d'uso: autorizzazione ai casi d’uso protetti
+### Diagramma con autenticazione
 Dopo aver effettuato il login ed ottenuto un token JWT valido, ogni utente autenticato può accedere esclusivamente alle funzionalità previste per il proprio ruolo. Il sistema applica un meccanismo di autorizzazione basato sui ruoli contenuti nel token: l’attore User può accedere ai casi d’uso relativi alla gestione delle proprie richieste di navigazione; l’attore Operator può gestire le aree vietate e valuta le richieste degli user aggiornando lo status della richiesta; l’attore Admin ha accesso alle funzionalità di gestione del credito degli utenti.
 <p align="center">
   <img src="images/Private.png" alt="Area Vietata" width="700"/>
 </p>
 <p align="center"><em></em></p>
 
-## Diagramma di Sequenza
+## Diagramma delle sequenze 
+Il diagramma di sequenza è uno strumento UML (Unified Modeling Language) che serve per rappresentare il flusso temporale delle interazioni tra i vari componenti di un sistema.Per ogni rotta API è stato realizzato un diagramma di sequenza che descrive il flusso delle interazioni tra client e backend. I diagrammi rappresentano l’ordine delle richieste e risposte, indicando le operazioni principali e i messaggi scambiati, al fine di documentare in modo chiaro la logica applicativa e semplificare eventuali sviluppi o manutenzioni future.
+### Login
+<p align="center">
+  <img src="images/login.png" alt="" width="900"/>
+</p>
+<p align="center"><em></em></p>
+
+### Visualizzazione NavigationPlans
+<p align="center">
+  <img src="images/GET:navigation-plans.png" alt="" width="900"/>
+</p>
+<p align="center"><em></em></p>
+
+### Creazione NavigationPlans
+<p align="center">
+  <img src="images/POST:navigation-plans.png" alt="Area Vietata" width="900"/>
+</p>
+<p align="center"><em></em></p>
+
+### Cancellazione NavigationPlans
+<p align="center">
+  <img src="images/DELETE:navigation-plans.png" alt="Area Vietata" width="900"/>
+</p>
+<p align="center"><em></em></p>
+
+### Approvazione NavigationPlans
+<p align="center">
+  <img src="images/UpdateStatuA.png" alt="Area Vietata" width="900"/>
+</p>
+<p align="center"><em></em></p>
+
+### Rifiuto NavigationPlans
+<p align="center">
+  <img src="images/UpdateStatsR.png" alt="Area Vietata" width="900"/>
+</p>
+<p align="center"><em></em></p>
+
+### Visualizzazione Aree Vietate
+<p align="center">
+  <img src="images/GET :restricted-areas.png" alt="Area Vietata" width="900"/>
+</p>
+<p align="center"><em></em></p>
+
+### Creazione Aree Vieatata
+<p align="center">
+  <img src="images/POST :restricted-areas.png" alt="Area Vietata" width="900"/>
+</p>
+<p align="center"><em></em></p>
+
+### Modifica Aree Vieatata
+<p align="center">
+  <img src="images/PUT :restricted-areas.png" alt="Area Vietata" width="900"/>
+</p>
+<p align="center"><em></em></p>
+
+### Eliminazione Aree Vieatata
+<p align="center">
+  <img src="images/DELETE :restricted-areas.png" alt="Area Vietata" width="900"/>
+</p>
+<p align="center"><em></em></p>
+
+### Ricarica token user
+<p align="center">
+  <img src="images/PUT:users.png" alt="Area Vietata" width="900"/>
+</p>
+<p align="center"><em></em></p>
+
 ## Progettazione Database
 Il database è strutturato su 3 collezioni principali:
 1) users
@@ -567,3 +634,588 @@ export enum ErrEnum {
   }
 }
 ```
+## Rotte
+| HTTP     | Endpoint                            | Descrizione                                                                                                                                                                                                                                                                                                                   | Autenticazione | Ruolo richiesto |
+| ---------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | --------------- |
+| **PATCH**    | `/users/:userId/token`                     | Aggiorna i token dell'utente specificato                                                                                                                                                                                                                                                      | Sì             | ADMIN           |
+| **GET**    | `/restricted-areas`              | Restituisce la lista completa delle aree vietate                                                                                                                                                                                                                                                                              | No             | Nessuno         |
+| **POST**   | `/restricted-areas/`             | Crea una nuova area vietata                                                                                                                                                                                                                                                                                                   | Sì             | OPERATOR        |
+| **DELETE** | `/restricted-areas/:areaId`          | Elimina un'area vietata esistente                                                                                                                                                                                                                                                                                             | Sì             | OPERATOR        |
+| **PUT**    | `/restricted-areas/:areaId`          | Aggiorna i dati di un'area vietata esistente                                                                                                                                                                                                                                                                                  | Sì             | OPERATOR        |
+| **GET**    | `/navigation-plans`              | Ottiene i piani di navigazione con filtri applicabili tramite il ruolo | Sì             | USER, OPERATOR  |
+| **POST**   | `/navigation-plans`              | Crea un nuovo piano di navigazione                                                                                                                                                                                                                                                                                            | Sì             | USER            |
+| **PATCH** | `/navigation-plans/:planId/cancelled`          | Modifica lo status di un Navigation plan in `cancelled`                                                                                                                                                                                                                                                                            | Sì             | USER            |
+| **PATCH**  | `/navigation-plans/:planId/accepted` | Accetta un piano di navigazione in attesa                                                                                                                                                                                                                                                                                     | Sì             | OPERATOR        |
+| **PATCH**  | `/navigation-plans/:planId/rejected` | Rifiuta un piano di navigazione (richiede motivazione)                                                                                                                                                                                                                                                                        | Sì             | OPERATOR        |
+| **POST**   | `/auth/login`                    | Autentica l’utente e restituisce il token JWT                                                                                                                                                                                                                                                                                 | No             | Nessuno         |
+<p>&nbsp;</p>
+
+> **Nota sull’utilizzo degli ID**
+>
+>I campi identificativi (`userId`, `areaId`, `planId`, ecc.) devono essere  forniti come stringhe valide nel formato **MongoDB ObjectId**, cioè come una `stringa esadecimale di 24 caratteri (12 byte), ad esempio 507f1f77bcf86cd799439011`
+Se l'ID fornito non rispetta il formato `ObjectId`, la richiesta verrà rifiutata con un errore 400  .
+>
+ > MongoDB genera automaticamente gli ObjectId al momento della creazione dei documenti, ma nelle richieste API in cui è necessario specificare un ID esistente (ad esempio per aggiornare, leggere o cancellare un documento), il client deve fornire un valore valido.
+
+<p>&nbsp;</p>
+
+> **Nota sull’utilizzo delle date**
+>
+>Le date devono essere fornite in formato **ISO 8601**, supportando i seguenti formati:
+> - **solo data** → `YYYY-MM-DD` 
+> - **data + orario** → `YYYY-MM-DDTHH:mm:ss`  
+> - **data + orario + offset di fuso orario** → `YYYY-MM-DDTHH:mm:ssZ` oppure `YYYY-MM-DDTHH:mm:ss+02:00`
+>
+> **ESEMPI**
+> - `2025-06-08`
+> - `2025-06-08T12:00:00`
+> - `2025-06-08T12:00:00Z`
+> - `2025-06-08T12:00:00+02:00`
+
+<p>&nbsp;</p>
+
+> **Nota sull’utilizzo delle Coordinate**
+>
+> I waypoint devono essere forniti come oggetti con le seguenti proprietà numeriche:
+> - lat (latitudine): valore compreso tra -90 e +90
+> - lon (longitudine): valore compreso tra -180 e +180 
+> Le coordinate sono espresse in gradi decimali (sistema WGS84), con la seguente struttura:
+>```ts
+>   {
+ >     "lat": 43.5,
+ >     "lon": 12.5
+ >   }
+>```
+
+<p>&nbsp;</p>
+
+> **Nota sugli errori**
+>Tutte le richieste vengono validate prima dell’elaborazione.
+Se i dati forniti non rispettano i formati richiesti o le regole di validazione, l’API restituisce una risposta di errore con:
+Codice HTTP: 400 Bad Request
+Formato della risposta di errore:
+>```ts
+>{
+> "error":"Errore"
+>}
+>```
+
+## POST /auth/login
+### Parametri
+| **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
+|-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
+| Body            | *email*             | `string`               | Indirizzo email univoco associato all'utente   | No                      |
+| Body            | *password*          | `string`               | Password associata all'utente                  | No                      |
+
+La richiesta può essere svolta in questo modo:
+```ts
+POST http://localhost:3000/auth/login
+
+{
+  "email": "email@example.com",
+  "password": "password"
+}
+```
+
+La risposta attesa avrà questa forma:
+```ts
+200 OK
+{
+  "token": "token example"
+}
+```
+## GET /restricted-areas
+### Parametri
+
+Nessuno 
+
+La richiesta può essere svolta in questo modo:
+```ts
+POST http://localhost:3000/restricted-areas
+```
+
+La risposta attesa avrà questa forma:
+```ts
+200 OK
+
+[
+    {
+        "topLeft": {
+            "lat": 45,
+            "lon": 10
+        },
+        "bottomRight": {
+            "lat": 44,
+            "lon": 11
+        },
+        "_id": "68503a2086eb42322104f82e",
+    },
+    {
+        "topLeft": {
+            "lat": 43.5,
+            "lon": 12.5
+        },
+        "bottomRight": {
+            "lat": 43,
+            "lon": 13
+        },
+        "_id": "68503a2086eb42322104f82f",
+    }
+]
+```
+
+## POST /restricted-areas
+### Parametri
+| **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
+|-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
+| Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
+| Body            | *topLeft*             | `Waypoint`               | Coordinata dell'angolo superiore sinistro  | No                      |
+| Body            | *bottomRight*          | `Waypoint`               |Coordinata dell'angolo inferiore destro                  | No                      |
+
+
+
+La richiesta può essere svolta in questo modo:
+```ts
+POST http://localhost:3000/restricted-areas
+Authorization: Bearer {{jwt_token}}
+
+{
+  "topLeft": {
+            "lon": 43.5,
+            "lat": 12.5
+          },
+  "bottomRight": {
+      "lon": 43,
+      "lat": 13
+  }
+}
+```
+
+La risposta attesa avrà questa forma:
+```ts
+201 OK
+{
+  "topLeft": {
+            "lon": 43.5,
+            "lat": 12.5
+          },
+  "bottomRight": {
+      "lon": 43,
+      "lat": 13
+  }
+  "_id": "6858064fcb0e48b0c5138a04",
+}
+```
+
+## PUT /restricted-areas/:areaId
+### Parametri
+| **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
+|-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
+| Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
+| Params            | *areaId*             | `ObjectId`               | identificatvo dell'area vietata | No                      |               |
+| Body            | *topLeft*             | `Waypoint`               | Coordinata dell'angolo superiore sinistro | No                 |               |
+| Body            | *bottomRight*             | `Waypoint`               | Coordinata dell'angolo inferiore destro  | No                    |               |
+
+
+
+La richiesta può essere svolta in questo modo:
+```ts
+PUT http://localhost:3000/restricted-areas/6858064fcb0e48b0c5138a04
+Authorization: Bearer {{jwt_token}}
+
+{
+  "topLeft": {
+            "lon": 2.5,
+            "lat": 34.5
+          },
+  "bottomRight": {
+            "lon": 22.5,
+            "lat": 12.5
+          },
+}
+```
+
+La risposta attesa avrà questa forma:
+```ts
+200 OK
+{
+
+  "topLeft": {
+            "lon": 2.5,
+            "lat": 34.5
+          },
+  "bottomRight": {
+            "lon": 22.5,
+            "lat": 12.5
+          },
+
+  "_id": "6858064fcb0e48b0c5138a04",
+}
+```
+
+
+## DELETE /restricted-areas/:areaId
+### Parametri
+| **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
+|-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
+| Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
+| Params            | *areaId*             | `ObjectId`               | identificatvo dell'area vietata | No                      |     No         |
+
+
+
+La richiesta può essere svolta in questo modo:
+```ts
+DELETE http://localhost:3000/restricted-areas/6858064fcb0e48b0c5138a04
+Authorization: Bearer {{jwt_token}}
+```
+
+La risposta attesa avrà questa forma:
+```ts
+200 OK
+```
+
+## PATCH /users/:userId/token
+### Parametri
+| **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
+|-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
+| Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
+| Params            | *userId*             | `ObjectId`               | identificatvo dell'area vietata | No                      |               |
+| Body            | *tokens*             | `number`               | Numero di token da ricaricare all'utente | Si                     |               |
+
+
+
+La richiesta può essere svolta in questo modo:
+```ts
+PATCH http://localhost:3000/users/68503a2086eb42322104f82a/token
+Authorization: Bearer {{jwt_token}}
+{
+  "tokens": 3
+}
+```
+
+La risposta attesa avrà questa forma:
+```ts
+200 OK
+{
+    "_id": "68503a2086eb42322104f82a",
+    "email": "alepetty@gmail.com",
+    "password": "$2b$10$EN2qlioImUgjWEU7ThcFg.rXG1NOHvpGXfrgw0xCyiHYWuVN7MD96",
+    "role": "user",
+    "tokens": 16,
+}
+```
+## GET /navigation-plans User
+
+### Parametri 
+| **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
+|-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
+| Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
+| Query Params            | *from*             | `timestamp`               | Filtra i piani  con la `startDate`  successiva o uguale alla data specificata.  | Si                     |
+| Query Params            | *to*          | `timestamp`               |        Filtra i piani  con la `startDate`  precedente o uguale alla data specificata          | Si                      |
+| Query Params            | *status*          | `string`               | Status dei piani              | Si                      |
+| Query Params            | *format*          | `string`               | Formato con cui l'utente vuole esportare i piani               | Si                      |
+
+La richiesta può essere svolta in questo modo:
+```ts
+GET http://localhost:3000/navigation-plans
+Authorization: Bearer {{jwt_token}}
+```
+
+La risposta attesa avrà questa forma:
+```ts
+200 OK
+[
+    {
+        "_id": "685122ae6d91770d497539eb",
+        "userId": "68503a2086eb42322104f82a",
+        "boatId": "1234567890",
+        "waypoints": [
+            {
+                "lon": 1,
+                "lat": 90
+            },
+            {
+                "lon": 2,
+                "lat": 70.9
+            },
+            {
+                "lon": 1,
+                "lat": 90
+            }
+        ],
+        "startDate": "2025-08-15T13:41:07.000Z",
+        "endDate": "2025-09-15T13:41:07.000Z",
+        "status": "accepted",
+        "__v": 0,
+        "rejectionReason": ""
+    },
+]
+```
+
+## GET /navigation-plans (Operator)
+
+### Parametri 
+| **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
+|-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
+| Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
+| Query Params            | *status*          | `string`               | Status dei piani              | Si                      |
+
+La richiesta può essere svolta in questo modo:
+```ts
+GET http://localhost:3000/navigation-plans
+Authorization: Bearer {{jwt_token}}
+```
+
+La risposta attesa avrà questa forma:
+```ts
+200 OK
+[
+    {
+        "_id": "685122ae6d91770d497539eb",
+        "userId": "68503a2086eb42322104f82a",
+        "boatId": "1234567890",
+        "waypoints": [
+            {
+                "lon": 1,
+                "lat": 90
+            },
+            {
+                "lon": 2,
+                "lat": 70.9
+            },
+            {
+                "lon": 1,
+                "lat": 90
+            }
+        ],
+        "startDate": "2025-08-15T13:41:07.000Z",
+        "endDate": "2025-09-15T13:41:07.000Z",
+        "status": "accepted",
+        "rejectionReason": ""
+    },
+]
+```
+## POST /navigation-plans
+### Parametri
+### Parametri 
+| **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
+|-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
+| Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
+| Body            | *boatId*          | `string`               | Codice della barca          | No                      |
+| Body            | *waypoints*          | `Waypoint[]`               | Insieme di cordinate del viaggio            | No                      |
+| Body            | *startDate*          | `string`               | Data di partenza           | No                      |
+| Body            | *endDate*          | `string`               | Data di rientro             | No                      |
+
+La richiesta può essere svolta in questo modo:
+```ts
+POST http://localhost:3000/navigation-plans
+{
+  "boatId": "1234567890",
+  "waypoints": [
+    {
+      "lat": 89,
+      "lon": 1
+    },
+    {
+      "lat": 70.9,
+      "lon": 2
+    },
+    {
+      "lat": 89,
+      "lon": 1
+    }
+  ],
+  "startDate": "2025-08-15T13:41:07.000Z",
+  "endDate": "2025-09-15T13:41:07.000Z"
+}
+
+```
+
+La risposta attesa avrà questa forma:
+```ts
+201 Created
+{
+    "boatId": "1234567890",
+    "waypoints": [
+        {
+            "lat": 89,
+            "lon": 1
+        },
+        {
+            "lat": 70.9,
+            "lon": 2
+        },
+        {
+            "lat": 89,
+            "lon": 1
+        }
+    ],
+    "startDate": "2025-08-15T13:41:07.000Z",
+    "endDate": "2025-09-15T13:41:07.000Z",
+    "userId": "68503a2086eb42322104f82a"
+}
+```
+## PATCH /navigation-plans/:planId/cancelled
+### Parametri
+| **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
+|-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
+| Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
+| Params            | *planId*             | `ObjectId`               | identificatvo piano | No                      |               |
+
+
+La richiesta può essere svolta in questo modo:
+```ts
+PATCH http://localhost:3000/navigation-plans/685822f268f21a83c475c4dc/cancelled
+Authorization: Bearer {{jwt_token}}
+```
+
+La risposta attesa avrà questa forma:
+```ts
+200 OK
+{
+    "_id": "685822f268f21a83c475c4dc",
+    "userId": "68503a2086eb42322104f82a",
+    "boatId": "1234567890",
+    "waypoints": [
+        {
+            "lon": 1,
+            "lat": 89
+        },
+        {
+            "lon": 2,
+            "lat": 70.9
+        },
+        {
+            "lon": 1,
+            "lat": 89
+        }
+    ],
+    "startDate": "2025-08-15T13:41:07.000Z",
+    "endDate": "2025-09-15T13:41:07.000Z",
+    "status": "cancelled",
+}
+```
+
+## PATCH /navigation-plans/:planId/accepted
+### Parametri
+| **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
+|-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
+| Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
+| Params            | *planId*             | `ObjectId`               | identificatvo piano | No                      |               |
+
+
+La richiesta può essere svolta in questo modo:
+```ts
+PATCH http://localhost:3000/navigation-plans/685822f268f21a83c475c4dc/accepted
+Authorization: Bearer {{jwt_token}}
+```
+
+La risposta attesa avrà questa forma:
+```ts
+200 OK
+{
+    "_id": "685822f268f21a83c475c4dc",
+    "userId": "68503a2086eb42322104f82a",
+    "boatId": "1234567890",
+    "waypoints": [
+        {
+            "lon": 1,
+            "lat": 89
+        },
+        {
+            "lon": 2,
+            "lat": 70.9
+        },
+        {
+            "lon": 1,
+            "lat": 89
+        }
+    ],
+    "startDate": "2025-08-15T13:41:07.000Z",
+    "endDate": "2025-09-15T13:41:07.000Z",
+    "status": "accepted",
+}
+```
+## PATCH /navigation-plans/:planId/rejected
+### Parametri
+| **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
+|-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
+| Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
+| Params            | *planId*             | `ObjectId`               | Identificatvo piano | No                      |               |
+| Body            | *reason*          | `string`               | Motivo del rifiuto          | No                |
+
+La richiesta può essere svolta in questo modo:
+```ts
+PATCH http://localhost:3000/navigation-plans/685822f268f21a83c475c4dc/accepted
+Authorization: Bearer {{jwt_token}}
+```
+
+La risposta attesa avrà questa forma:
+```ts
+200 OK
+{
+    "_id": "68582b5f68f21a83c475c4ea",
+    "userId": "68503a2086eb42322104f82a",
+    "boatId": "1234567890",
+    "waypoints": [
+        {
+            "lon": 1,
+            "lat": 3
+        },
+        {
+            "lon": 2,
+            "lat": 70.9
+        },
+        {
+            "lon": 1,
+            "lat": 3
+        }
+    ],
+    "startDate": "2025-08-15T13:41:07.000Z",
+    "endDate": "2025-09-15T13:41:07.000Z",
+    "status": "rejected",
+    "rejectionReason": "terremoto"
+}
+```
+## Istruzioni di configurazione e avvio
+Di seguito sono elencati i passaggi necessari per configurare correttamente l'applicazione e avviarla all'interno di un container Docker.
+> Prerequisiti 
+> Assicurarsi di avere installati:
+> - **Docker**
+> - **Docker Compose**
+>
+### Clonare la repository
+```bash
+git clone https://github.com/DevelopApp22/AcquaNav.git
+```
+### Creare chiavi per RSA
+Accedere alla directory del progetto:
+```bash
+cd AcquaNav
+```
+Creare la directory per le chiavi
+```bash
+mkdir keys
+cd keys
+```
+Generare la chiave privata:
+```bash
+ssh-keygen -t rsa -b 4096 -m PEM -f private
+```
+Generare la chiave pubblica:
+```bash
+openssl rsa -in private -pubout -outform PEM -out public
+```
+### Avvio Backend
+Posizionarsi nella root del progetto ed eseguire:
+```bash
+docker-compose up --build
+```
+Se la build avviene correttamente, l’applicazione sarà disponibile all’indirizzo:
+```bash
+http://localhost:3000/
+```
+### Test 
+Per eseguire i test delle API è possibile utilizzare Postman sfruttando i file forniti:
+- Collection: Collection_TUO_PROGETTO.postman_collection.json
+- Environment: Environment_TUO_PROGETTO.postman_environment.json

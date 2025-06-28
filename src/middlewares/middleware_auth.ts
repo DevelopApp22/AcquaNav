@@ -1,12 +1,10 @@
 import { ErrEnum } from "../factory/error/error_enum";
 import { ErrorFactory } from "../factory/error/error_factory";
-import * as jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
-import { UserRole } from "../model/user.interface";
-import path from 'path';
-import fs from 'fs';
 import { Request, Response, NextFunction } from 'express';
 import { UserPayload } from "../types/user_payload";
+import { UserRole } from "../enum/userRole";
+import { verifyJwt } from "../utils/jwt";
 
 dotenv.config();
 
@@ -68,8 +66,7 @@ export function checkToken(req: Request, res: Response, next: NextFunction): voi
  */
 export function verifyAndAuthenticate(req: Request, res: Response, next: NextFunction): void{
     try {
-        const publicKey = fs.readFileSync(path.resolve(process.env.JWT_PUBLIC_KEY!), 'utf8');
-        const payload : UserPayload =jwt.verify(req.token!, publicKey, { algorithms: ['RS256'] }) as UserPayload
+        const payload= verifyJwt<UserPayload>(req.token)
         if (payload != null) {
             req.user = payload;
             next();

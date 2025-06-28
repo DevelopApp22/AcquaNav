@@ -1,6 +1,6 @@
 import { ErrEnum } from "../factory/error/error_enum";
 import { ErrorFactory } from "../factory/error/error_factory";
-import { INavigationPlan, StatusNavigation } from "../model/navigationPlan.interface";
+import { INavigationPlan } from "../model/navigationPlan.interface";
 import { NavigationPlanRepository } from "../repository/navigationPlan_repository";
 import { RestrictedAreaRepository } from "../repository/restrictedArea_repository";
 import { UserRepository } from "../repository/user_repository";
@@ -8,169 +8,191 @@ import { createBoundingBoxPolygon, createLineStringFromCoords, isRouteOutsideBox
 import { TokenCosts } from "../enum/token_cost";
 import { INavigationPlanQuery } from "../types/navigationPlanQuery";
 import { FilterQuery } from "mongoose";
-
+import { StatusNavigation } from "../enum/statusNavigation";
 
 /**
  * Classe `NavigationPlanService`
  *
- * Gestisce la logica di business per la creazione dei piani di navigazione.
- * Si occupa della validazione dell'utente, del controllo delle aree vietate e della gestione dei token.
- * Si interpone tra controller e repository per applicare le regole di dominio prima delle operazioni di persistenza.
+ * Gestisce la logica di business per la creazione e gestione dei piani di navigazione.
+ * Si occupa di validare l'utente, controllare le aree vietate, gestire i token e applicare le regole di dominio.
+ * Funziona come livello intermedio tra controller e repository.
  */
 export class NavigationPlanService {
 
     /**
      * Costruttore del servizio.
-     * @param navigationPlanRepository Repository per la gestione dei piani di navigazione.
-     * @param userRepository Repository per la gestione degli utenti.
-     * @param restricted_area Repository delle aree vietate alla navigazione.
+     * @param navigationPlanRepository Repository per i piani di navigazione.
+     * @param userRepository Repository per gli utenti.
+     * @param restrictedAreaRepository Repository per le aree vietate.
      */
     constructor(
         private navigationPlanRepository: NavigationPlanRepository,
         private userRepository: UserRepository,
-        private restricted_area: RestrictedAreaRepository
+        private restrictedAreaRepository: RestrictedAreaRepository
     ) {}
 
     /**
-     * Crea un nuovo piano di navigazione, applicando tutte le regole di business.
-     * - Verifica che l'utente esista.
-     * - Controlla che abbia abbastanza token.
-     * - Controlla che la rotta non attraversi aree vietate.
-     * - Scala il costo in token.
-     * - Registra il piano nel database.
-     *
-     * @param plan Oggetto contenente i dati del piano di navigazione.
-     * @throws `UserNotFound` se l'utente non esiste.
-     * @throws `InsufficientTokens` se l'utente ha meno di 5 token o se la data è troppo ravvicinata.
-     * @throws `RouteRestricted` se la rotta attraversa aree vietate.
+     * Crea un nuovo piano di navigazione, verificando:
+     * - Esistenza utente
+     * - Disponibilità token
+     * - Rotta libera da aree vietate
+     * - Scala il costo in token e salva il piano
+     * 
+     * @param plan Piano di navigazione da creare.
+     * @param userId ID dell'utente proprietario.
+     * @throws UserNotFound, InsufficientTokens, RouteRestricted
      */
-    async createNavigationPlan(plan: INavigationPlan,userId:string) {
+    async createNavigationPlan(plan: INavigationPlan, userId: string): Promise<INavigationPlan> {
         const errorFactory = new ErrorFactory();
-       
+
+        // Recupera l'utente e verifica la sua esistenza
         const user = await this.userRepository.getUserById(userId);
-    
         if (!user) {
             throw errorFactory.getError(ErrEnum.UserNotFound);
         }
 
+        // Verifica disponibilità token
         if (!user.tokens || user.tokens < TokenCosts.CREATE_PLAN) {
             throw errorFactory.getError(ErrEnum.InsufficientTokens);
         }
 
-        const restricted_area = await this.restricted_area.listAllAreas();
+        // Recupera tutte le aree vietate
+        const restrictedAreas = await this.restrictedAreaRepository.listAllAreas();
         const route = createLineStringFromCoords(plan.waypoints);
 
-        for (const area of restricted_area) {
-            
+        // Controlla se la rotta attraversa aree vietate
+        for (const area of restrictedAreas) {
             const boundingBox = createBoundingBoxPolygon(area.topLeft, area.bottomRight);
             if (!isRouteOutsideBox(route, boundingBox)) {
                 throw errorFactory.getError(ErrEnum.RouteRestricted);
             }
         }
+
+        // Scala il costo token all'utente
         await this.userRepository.updateUser(userId, {
             tokens: user.tokens - TokenCosts.CREATE_PLAN
         });
 
-        plan.userId=userId
-        await this.navigationPlanRepository.createPlan(plan);
-        return plan
-
+        // Assegna l'utente al piano e salva
+        plan.userId = userId;
+        const createdPlan = await this.navigationPlanRepository.createPlan(plan);
+        return createdPlan;
     }
 
     /**
-     * Annulla (soft-delete) un piano di navigazione, impostandone lo stato su `CANCELLED`.
+     * Annulla un piano di navigazione (soft delete: imposta lo stato su CANCELLED).
      * 
-     * Requisiti per poter annullare il piano:
-     * - Il piano deve esistere.
-     * - L'utente richiedente deve essere il proprietario del piano.
-     * - Il piano deve avere stato `PENDING`.
-     * 
-     * @param id ID del piano da annullare.
-     * @param userId ID dell'utente che richiede l'annullamento.
-     * 
-     * @throws `PlanNotFound` se il piano non esiste.
-     * @throws `Unauthorized` se l'utente non è il proprietario del piano.
-     * @throws `CannotCancelPlan` se il piano non è in stato `PENDING`.
-     * @throws `InternalServerError` per errori generici inattesi.
+     * @param id ID del piano.
+     * @param userId ID dell'utente che richiede la cancellazione.
+     * @throws PlanNotFound, Unauthorized, CannotCancelPlan
      */
-    async deleteNavigationPlan(id: string, userId: string) {
-
+    async deleteNavigationPlan(id: string, userId: string): Promise<INavigationPlan> {
         const errorFactory = new ErrorFactory();
 
+        // Recupera il piano
         const plan = await this.navigationPlanRepository.getPlanById(id);
-
         if (!plan) {
             throw errorFactory.getError(ErrEnum.PlanNotFound);
         }
 
+        // Verifica che l'utente sia il proprietario
         if (plan.userId !== userId) {
             throw errorFactory.getError(ErrEnum.Unauthorized);
         }
 
+        // Solo piani in stato PENDING possono essere annullati
         if (plan.status !== StatusNavigation.PENDING) {
             throw errorFactory.getError(ErrEnum.CannotCancelPlan);
         }
 
-        const navigationPlan = await this.navigationPlanRepository.updatePlan(id, {
+        // Aggiorna lo stato a CANCELLED
+        const updatedPlan = await this.navigationPlanRepository.updatePlan(id, {
             status: StatusNavigation.CANCELLED
         });
-        return navigationPlan
+
+        return updatedPlan!;
     }
-
-  
-async updatePlanStatus(id: string, status: StatusNavigation, reason?: string) {
-    
-    const errorFactory = new ErrorFactory();
-    const plan = await this.navigationPlanRepository.getPlanById(id);
-
-    if (!plan) {
-        throw errorFactory.getError(ErrEnum.PlanNotFound);
-    }
-
-    if (plan.status === StatusNavigation.CANCELLED) {
-        throw errorFactory.getError(ErrEnum.PlanNotFound);
-    }
-
-    const navigationPlan=await this.navigationPlanRepository.updatePlan(id, {
-        status: status,
-        rejectionReason: status === StatusNavigation.REJECTED ? reason ?? "" : ""
-    });
-
-    return navigationPlan
-}
 
     /**
-     * Recupera i piani di navigazione in base ai filtri specificati nella query.
-     *
-     * I filtri supportati includono:
-     * - Intervallo di date (startDate): `from` (data inizio minima) e `to` (data inizio massima)
-     * - Stato del piano (`status`)
-     * - ID dell’utente proprietario del piano (`userId`)
-     *
-     * Tutti i filtri sono opzionali. Se non viene specificato nulla, restituisce tutti i piani.
-     *
-     * @param query Oggetto contenente i parametri di filtro.
-     * @returns Lista di piani di navigazione che soddisfano i criteri.
+     * Aggiorna lo stato di un piano di navigazione (es. APPROVED, REJECTED).
+     * 
+     * Se lo stato è REJECTED, salva anche il motivo.
+     * 
+     * @param id ID del piano.
+     * @param status Nuovo stato.
+     * @param reason Facoltativo, motivo del rifiuto.
+     * @throws PlanNotFound, PlanNotEditableStatus
      */
-    async getNavigationPlan(query: INavigationPlanQuery) {
-        const filter: FilterQuery<INavigationPlan> = {};
-        if (query.from || query.to) {
-                filter.startDate = {};
-                if (query.from) {
-                filter.startDate.$gte = new Date(query.from);
+    async updatePlanStatus(id: string, status: StatusNavigation, reason?: string): Promise<INavigationPlan> {
+        const errorFactory = new ErrorFactory();
+
+        // Recupera il piano
+        const plan = await this.navigationPlanRepository.getPlanById(id);
+        if (!plan) {
+            throw errorFactory.getError(ErrEnum.PlanNotFound);
+        }
+
+        // Solo i piani ancora PENDING possono essere aggiornati
+        if (plan.status !== StatusNavigation.PENDING) {
+            throw errorFactory.getError(ErrEnum.PlanNotEditableStatus);
+        }
+
+        // Costruzione dinamica del payload di aggiornamento
+        const updatedData: Partial<INavigationPlan> = {
+            status,
+            ...(status === StatusNavigation.REJECTED && { rejectionReason: reason ?? "" })
+        };
+
+        const updatedPlan = await this.navigationPlanRepository.updatePlan(id, updatedData);
+        return updatedPlan!;
+    }
+
+    /**
+     * Recupera i piani di navigazione filtrati tramite query dinamica.
+     * 
+     * Filtri supportati:
+     * - Date (from / to su startDate)
+     * - Stato
+     * - UserId
+     * 
+     * @param query Parametri di filtro.
+     * @returns Lista di piani filtrati.
+     * @throws NoNavigationPlansFound se nessun piano corrisponde ai filtri.
+     */
+    async getNavigationPlan(query: INavigationPlanQuery): Promise<INavigationPlan[]> {
+        const errorFactory = new ErrorFactory();
+
+        // Costruzione filtro dinamico
+        const filter: FilterQuery<INavigationPlan> = {
+            
+            // Se query.status esiste, aggiungiamo la proprietà "status: query.status"
+            ...(query.status && { status: query.status }),
+
+            // Se query.userId esiste, aggiungiamo "userId: query.userId"
+            ...(query.userId && { userId: query.userId }),
+
+            // Gestione dinamica del range date (startDate)
+            ...(query.from || query.to
+                ? {
+                    startDate: {
+                        // Se esiste query.from, aggiungiamo il filtro $gte (maggiore o uguale)
+                        ...(query.from && { $gte: new Date(query.from) }),
+                        // Se esiste query.to, aggiungiamo il filtro $lte (minore o uguale)
+                        ...(query.to && { $lte: new Date(query.to) })
+                    }
                 }
-                if (query.to) {
-                filter.startDate.$lte = new Date(query.to);
-                }
-        }
-        if (query.status) {
-            filter.status = query.status;
-        }
-        if (query.userId) {
-            filter.userId = query.userId;
-        }
+                : {} // Se né from né to esistono, non aggiungiamo nulla per startDate
+            )
+        };
+
+        // Esecuzione query con filtro costruito dinamicamente
         const navigationPlans = await this.navigationPlanRepository.getPlans(filter);
 
-        return navigationPlans;
+        // Se nessun piano trovato, generiamo l'errore specifico
+        if (navigationPlans.length === 0) {
+            throw errorFactory.getError(ErrEnum.NoNavigationPlansFound);
         }
+
+        return navigationPlans;
     }
+}
