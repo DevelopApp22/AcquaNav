@@ -1204,7 +1204,7 @@ openssl genpkey -algorithm RSA -out private -pkeyopt rsa_keygen_bits:2048
 ```
 Generare la chiave pubblica:
 ```bash
-openssl rsa -pubout -in key/private -out key/public
+openssl rsa -pubout -in private -out public
 ```
 ### Avvio Backend
 Posizionarsi nella root del progetto ed eseguire:
