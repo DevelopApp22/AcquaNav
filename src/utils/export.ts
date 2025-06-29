@@ -4,13 +4,6 @@ import { format } from 'date-fns';
 import { Buffer } from 'buffer';
 import { INavigationPlan } from '../model/navigationPlan.interface';
 
-// --- Funzione per esportare JSON ---
-
-export function exportToJson(data: INavigationPlan[]): Buffer {
-  const jsonString = JSON.stringify(data, null, 2);
-  return Buffer.from(jsonString, 'utf-8');
-}
-
 // --- Funzione per esportare PDF ---
 
 export async function exportToPdf(data: INavigationPlan[]): Promise<Buffer> {
