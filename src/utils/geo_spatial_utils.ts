@@ -23,10 +23,6 @@ export function createBoundingBoxPolygon(
 
   const bbox: [number, number, number, number] = [topLeft.lon, bottomRight.lat, bottomRight.lon, topLeft.lat];
   const polygon = bboxPolygon(bbox);
-  console.log("createBoundingBoxPolygon:");
-  console.log("  Input - Top Left:", topLeft, "Bottom Right:", bottomRight);
-  console.log("  BBox Array:", bbox);
-  console.log("  Output Polygon:", JSON.stringify(polygon, null, 2));
   return polygon;
 
 }
@@ -41,10 +37,6 @@ export function createLineStringFromCoords(
   // Converte ogni oggetto { lon, lat } in array [lon, lat]
   const formattedCoords = coords.map(coord => [coord.lon, coord.lat]);
   const line = lineString(formattedCoords, properties);
-  console.log("createLineStringFromCoords:");
-  console.log("  Input Waypoints:", coords);
-  console.log("  Formatted:", formattedCoords);
-  console.log("  Output LineString:", JSON.stringify(line, null, 2));
   return line;
 }
 
