@@ -1217,7 +1217,7 @@ http://localhost:3000/
 ### Test 
 Per eseguire i test delle API è possibile utilizzare Postman sfruttando i file forniti:
 - Collection: Collection_AcquaNav_PA_Pettinaro_2025.json
-- Environment:Postaman_ENV_AcquaNav_PA_Pettinaro_2025.json
+- Environment:Postaman_ENV_AcquaNav_PA_Pettinaro_2025.json (nello zip insieme al .env)
 
 Inoltre sono state testate 2 funzioni middleware con jest 
 ```bash
