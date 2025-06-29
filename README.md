@@ -252,7 +252,7 @@ Rappresentano i piani di navigazione richiesti dagli utenti.I documenti dentro l
 | Campo             | Tipo             | Descrizione                                                |
 | ----------------- | ---------------- | ---------------------------------------------------------- |
 | `_id`             | ObjectId         | Identificativo univoco                                     |
-| `userId`          | string           | Riferimento a `users._id` (obbligatorio)                   |
+| `userId`          | ObjectId           | Riferimento a `users._id` (obbligatorio)                   |
 | `boatId`          | string           | Codice barca (obbligatorio, 10 caratteri esatti)           |
 | `waypoints`       | Array di embedded document  | Elenco di waypoint (coordinate geografiche)                |
 | `waypoints[].lon` | number           | Longitudine del waypoint                                   |
@@ -664,13 +664,12 @@ Se l'ID fornito non rispetta il formato `ObjectId`, la richiesta verrà rifiutat
 >Le date devono essere fornite in formato **ISO 8601**, supportando i seguenti formati:
 > - **solo data** → `YYYY-MM-DD` 
 > - **data + orario** → `YYYY-MM-DDTHH:mm:ss`  
-> - **data + orario + offset di fuso orario** → `YYYY-MM-DDTHH:mm:ssZ` oppure `YYYY-MM-DDTHH:mm:ss+02:00`
+> - **data + orario + offset di fuso orario** → `YYYY-MM-DDTHH:mm:ssZ`
 >
 > **ESEMPI**
 > - `2025-06-08`
 > - `2025-06-08T12:00:00`
-> - `2025-06-08T12:00:00Z`
-> - `2025-06-08T12:00:00+02:00`
+> - `2025-06-29T11:14:25Z`
 
 <p>&nbsp;</p>
 
@@ -709,7 +708,7 @@ Formato della risposta di errore:
 
 La richiesta può essere svolta in questo modo:
 ```ts
-POST http://localhost:3000/auth/login
+POST http://localhost:3000/api/auth/login
 
 {
   "email": "email@example.com",
@@ -776,7 +775,7 @@ La risposta attesa avrà questa forma:
 
 La richiesta può essere svolta in questo modo:
 ```ts
-POST http://localhost:3000/restricted-areas
+POST http://localhost:3000/api/restricted-areas
 Authorization: Bearer {{jwt_token}}
 
 {
@@ -820,7 +819,7 @@ La risposta attesa avrà questa forma:
 
 La richiesta può essere svolta in questo modo:
 ```ts
-PUT http://localhost:3000/restricted-areas/6858064fcb0e48b0c5138a04
+PUT http://localhost:3000/api/restricted-areas/6858064fcb0e48b0c5138a04
 Authorization: Bearer {{jwt_token}}
 
 {
@@ -865,7 +864,7 @@ La risposta attesa avrà questa forma:
 
 La richiesta può essere svolta in questo modo:
 ```ts
-DELETE http://localhost:3000/restricted-areas/6858064fcb0e48b0c5138a04
+DELETE http://localhost:3000/api/restricted-areas/6858064fcb0e48b0c5138a04
 Authorization: Bearer {{jwt_token}}
 ```
 
@@ -886,7 +885,7 @@ La risposta attesa avrà questa forma:
 
 La richiesta può essere svolta in questo modo:
 ```ts
-PATCH http://localhost:3000/users/68503a2086eb42322104f82a/token
+PATCH http://localhost:3000/api/users/68503a2086eb42322104f82a/token
 Authorization: Bearer {{jwt_token}}
 {
   "tokens": 3
@@ -917,7 +916,7 @@ La risposta attesa avrà questa forma:
 
 La richiesta può essere svolta in questo modo:
 ```ts
-GET http://localhost:3000/navigation-plans
+GET http://localhost:3000/api/navigation-plans
 Authorization: Bearer {{jwt_token}}
 ```
 
@@ -962,7 +961,7 @@ La risposta attesa avrà questa forma:
 
 La richiesta può essere svolta in questo modo:
 ```ts
-GET http://localhost:3000/navigation-plans
+GET http://localhost:3000/api/navigation-plans
 Authorization: Bearer {{jwt_token}}
 ```
 
@@ -1008,7 +1007,7 @@ La risposta attesa avrà questa forma:
 
 La richiesta può essere svolta in questo modo:
 ```ts
-POST http://localhost:3000/navigation-plans
+POST http://localhost:3000/api/navigation-plans
 {
   "boatId": "1234567890",
   "waypoints": [
@@ -1065,7 +1064,7 @@ La risposta attesa avrà questa forma:
 
 La richiesta può essere svolta in questo modo:
 ```ts
-PATCH http://localhost:3000/navigation-plans/685822f268f21a83c475c4dc/cancelled
+PATCH http://localhost:3000/api/navigation-plans/685822f268f21a83c475c4dc/cancelled
 Authorization: Bearer {{jwt_token}}
 ```
 
@@ -1106,7 +1105,7 @@ La risposta attesa avrà questa forma:
 
 La richiesta può essere svolta in questo modo:
 ```ts
-PATCH http://localhost:3000/navigation-plans/685822f268f21a83c475c4dc/accepted
+PATCH http://localhost:3000/api/navigation-plans/685822f268f21a83c475c4dc/accepted
 Authorization: Bearer {{jwt_token}}
 ```
 
@@ -1146,7 +1145,7 @@ La risposta attesa avrà questa forma:
 
 La richiesta può essere svolta in questo modo:
 ```ts
-PATCH http://localhost:3000/navigation-plans/685822f268f21a83c475c4dc/accepted
+PATCH http://localhost:3000/api/navigation-plans/685822f268f21a83c475c4dc/accepted
 Authorization: Bearer {{jwt_token}}
 ```
 
