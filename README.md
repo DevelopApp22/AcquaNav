@@ -1200,11 +1200,11 @@ cd keys
 ```
 Generare la chiave privata:
 ```bash
-ssh-keygen -t rsa -b 4096 -m PEM -f private
+openssl genpkey -algorithm RSA -out private -pkeyopt rsa_keygen_bits:2048
 ```
 Generare la chiave pubblica:
 ```bash
-openssl rsa -in private -pubout -outform PEM -out public
+openssl rsa -pubout -in key/private -out key/public
 ```
 ### Avvio Backend
 Posizionarsi nella root del progetto ed eseguire:
