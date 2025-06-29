@@ -10,6 +10,7 @@ import { ErrEnum } from "./factory/error/error_enum";
 
 // Create an Express application
 const app = express();
+
 // Load environment variables from .env file
 dotenv.config();
 app.use(express.json());

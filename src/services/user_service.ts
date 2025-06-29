@@ -3,7 +3,6 @@ import {ErrorFactory} from "../factory/error/error_factory"
 import { ErrEnum } from "../factory/error/error_enum";
 import { UserRole } from "../enum/userRole";
 import { IUser } from "../model/user.interface";
-import { ObjectId } from "mongoose";
 
 /**
  * Classe `UserService`
@@ -33,7 +32,7 @@ export class UserService {
      * @returns L'utente aggiornato.
      * @throws Eccezioni in caso di utente non trovato o ruolo non autorizzato.
      */
-    async updateUserTokens(userId: ObjectId, tokensToAdd: number): Promise<IUser | null> {
+    async updateUserTokens(userId: string, tokensToAdd: number): Promise<IUser | null> {
         
         const user = await this.userRepository.getUserById(userId);
 

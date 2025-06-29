@@ -7,7 +7,7 @@ import { UserRepository } from "../repository/user_repository";
 import { createBoundingBoxPolygon, createLineStringFromCoords, isRouteOutsideBox } from "../utils/geo_spatial_utils";
 import { TokenCosts } from "../enum/token_cost";
 import { INavigationPlanQuery } from "../types/navigationPlanQuery";
-import mongoose, { FilterQuery } from "mongoose";
+import { FilterQuery } from "mongoose";
 import { StatusNavigation } from "../enum/statusNavigation";
 
 /**
@@ -96,7 +96,8 @@ export class NavigationPlanService {
         }
 
         // Verifica che l'utente sia il proprietario
-        if (plan.userId !== userId) {
+        if (plan.userId.toString()  !== userId) {
+            
             throw errorFactory.getError(ErrEnum.Unauthorized);
         }
 

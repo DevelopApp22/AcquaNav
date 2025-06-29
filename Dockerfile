@@ -4,7 +4,7 @@ FROM node:18
 WORKDIR /usr/src/app
 
 # Install dependencies separately (better caching)
-COPY package*.json ./
+COPY package*.json tsconfig.json ./
 RUN npm install
 
 # Copy rest of the app
@@ -14,4 +14,4 @@ COPY . .
 EXPOSE 3000
 
 # Start in dev mode with hot reload else in start mode
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

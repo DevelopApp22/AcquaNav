@@ -1,4 +1,5 @@
-
+/* eslint-env mongo */
+/* eslint-disable no-undef */
 
 // Seleziona il database
 db = db.getSiblingDB('navigationDb');

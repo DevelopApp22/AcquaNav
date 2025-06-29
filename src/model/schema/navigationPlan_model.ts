@@ -1,4 +1,4 @@
-import mongoose, { model, Schema, Types } from "mongoose";
+import  { model, Schema } from "mongoose";
 
 import { INavigationPlan } from "../navigationPlan.interface";
 import { StatusNavigation } from "../../enum/statusNavigation";

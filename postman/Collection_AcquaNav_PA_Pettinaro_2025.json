@@ -1,0 +1,1487 @@
+{
+	"info": {
+		"_postman_id": "87838fc3-cf25-418e-88a8-5d23855a09e1",
+		"name": "ProgettoPA_API",
+		"description": "Il testing del backend AquaNav ha l'obiettivo di verificare la correttezza e la robustezza delle API REST che gestiscono l'autenticazione, la creazione e il controllo dei piani di navigazione, e l'amministrazione delle aree vietate. I test sono organizzati per ruolo utente (`user`, `operator`, `admin`) e coprono sia i flussi validi sia i principali casi di errore, garantendo il rispetto delle regole di dominio e delle autorizzazioni previste dal sistema.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44809813",
+		"_collection_link": "https://alessandropettinaro.postman.co/workspace/Alessandro-pettinaro-'s-Workspa~e2610abe-661a-4026-82de-c247fb4c18fe/collection/44809813-87838fc3-cf25-418e-88a8-5d23855a09e1?action=share&source=collection_link&creator=44809813"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Login_User1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"const token = jsonData.token;",
+									"if (token) {",
+									"  pm.environment.set(\"jwt\", token);",
+									"  console.log(\"Token salvato:\", token);",
+									"} else {",
+									"  console.warn(\"Token non trovato nella risposta\");",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"user1@test.com\",\n    \"password\":\"1234\"\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login del USer 1"
+					},
+					"response": []
+				},
+				{
+					"name": "Login_User2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"const token = jsonData.token;",
+									"if (token) {",
+									"  pm.environment.set(\"jwt\", token);",
+									"  console.log(\"Token salvato:\", token);",
+									"} else {",
+									"  console.warn(\"Token non trovato nella risposta\");",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"user2@test.com\",\n    \"password\":\"1234\"\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login_Operator",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"const token = jsonData.token;",
+									"if (token) {",
+									"  pm.environment.set(\"jwt\", token);",
+									"  console.log(\"Token salvato:\", token);",
+									"} else {",
+									"  console.warn(\"Token non trovato nella risposta\");",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"operator1@test.com\",\n    \"password\":\"1234\"\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login_Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();",
+									"const token = jsonData.token;",
+									"if (token) {",
+									"  pm.environment.set(\"jwt\", token);",
+									"  console.log(\"Token salvato:\", token);",
+									"} else {",
+									"  console.warn(\"Token non trovato nella risposta\");",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"admin1@test.com\",\n    \"password\":\"1234\"\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login_Error_Invalid_Credetial",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"operator@test.com\",\n    \"password\":\"1234\"\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login_Error_Input_Missing_Input",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"operator1@test.com\"\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login_Error_Input_Email",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"operator1@test\",\n    \"password\":\"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Contiene un insieme di richieste POST utilizzate per testare l’endpoint di autenticazione `/auth/login`. I test sono suddivisi in due categorie principali: richieste con credenziali valide e richieste con errori, al fine di verificare sia il corretto funzionamento dell’autenticazione che la gestione degli errori da parte del sistema.\n\n### 1\\. Login con credenziali valide\n\nQueste richieste simulano il login per diversi tipi di utenti registrati nel sistema. Ogni richiesta prevede un corpo JSON con campi `email` e `password` correttamente compilati.\n\n- **Login User 1**  \n    Verifica l’autenticazione di un utente standard (user 1). La risposta attesa include un token JWT e i dati dell’utente.\n    \n- **Login User 2**  \n    Testa l’accesso di un secondo utente standard. Anche in questo caso ci si aspetta un token valido e conferma del ruolo \"user\".\n    \n- **Login Operatore**  \n    Simula il login di un utente con ruolo \"operator\". L’autenticazione deve restituire un token e i relativi privilegi associati al ruolo.\n    \n- **Login Admin**  \n    Verifica l’accesso dell’utente con privilegi di amministrazione. La risposta deve contenere il token JWT e confermare il ruolo \"admin\".\n    \n\n### 2\\. Login con errori\n\nQueste richieste sono progettate per validare la gestione di casi di errore comuni da parte dell’API di login. I test controllano la correttezza dei codici di stato HTTP e dei messaggi di errore restituiti.\n\n- **Credenziali errate**  \n    Simula un tentativo di accesso con email o password sbagliati.\n    \n- **Parametri mancanti nel body**  \n    In questo test il campo `password` viene omesso dal corpo della richiesta.\n    \n- **Email malformata**  \n    Il campo `email` contiene un formato non valido (ad esempio, manca il simbolo `@`)."
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Creazione_Piano",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"boatId\": \"1234567890\",\n  \"waypoints\": [\n    {\n      \"lat\": -46.88476562500048,\n      \"lon\": 34.23451236237041\n    },\n    {\n      \"lat\": -42.2705078125002,\n      \"lon\": 33.541394668983415\n    },\n    {\n      \"lat\": -46.57714843750014,\n      \"lon\": 31.466153715024703\n    },\n    {\n      \"lat\": -46.88476562500048,\n      \"lon\": 34.23451236237041\n    }\n  ],\n  \"startDate\": \"2025-07-24T16:10:00.000Z\",\n  \"endDate\": \"2025-07-27T16:10:00.000Z\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Creazione_Piano_Error_Route",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"boatId\": \"1234567890\",\n  \"waypoints\": [\n    {\n      \"lat\": -46,\n      \"lon\": 34\n    },\n    {\n      \"lat\": -42.2705078125002,\n      \"lon\": 33.541394668983415\n    },\n    {\n      \"lat\": -46.57714843750014,\n      \"lon\": 31.466153715024703\n    },\n    {\n      \"lat\": -46.88476562500048,\n      \"lon\": 33.23451236237041\n    }\n  ],\n  \"startDate\": \"2025-06-24T16:10:00.000Z\",\n  \"endDate\": \"2025-06-27T16:10:00.000Z\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Creazione_Piano_Error_Date",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"boatId\": \"1234567890\",\n  \"waypoints\": [\n    {\n      \"lat\": -46.88476562500048,\n      \"lon\": 34.23451236237041\n    },\n    {\n      \"lat\": -42.2705078125002,\n      \"lon\": 33.541394668983415\n    },\n    {\n      \"lat\": -46.57714843750014,\n      \"lon\": 31.466153715024703\n    },\n    {\n      \"lat\": -46.88476562500048,\n      \"lon\": 34.23451236237041\n    }\n  ],\n  \"startDate\": \"2025-07-21T16:10:00.000Z\",\n  \"endDate\": \"2025-07-20T16:10:00.000Z\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Creazione_Piano_Error_RestrictedArea",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"boatId\": \"1234567890\",\n\"waypoints\": [\n  {\n    \"lat\": 44.782148139642004,\n    \"lon\": 9.805188951180185\n  },\n  {\n    \"lat\": 44.74970388399029,\n    \"lon\": 10.021833366426932\n  },\n  {\n    \"lat\": 44.736140803750374,\n    \"lon\": 9.803118180143116\n  },\n  {\n    \"lat\": 44.782148139642004,\n    \"lon\": 9.805188951180185\n  }\n],\n  \"startDate\": \"2025-06-24T16:10:00.000Z\",\n  \"endDate\": \"2025-06-27T16:10:00.000Z\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Acquisizione_piani_User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans?format=pdf&to=2025-07-03T23:59:59Z",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans"
+							],
+							"query": [
+								{
+									"key": "to",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "pending",
+									"disabled": true
+								},
+								{
+									"key": "format",
+									"value": "pdf"
+								},
+								{
+									"key": "to",
+									"value": "2025-07-03T23:59:59Z"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Acquisizione_piani_User_Error_Input",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans?fom=d",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans"
+							],
+							"query": [
+								{
+									"key": "fom",
+									"value": "d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminazione_Piano_User1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans/686004818b6cba493a9a20ba/cancelled",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans",
+								"686004818b6cba493a9a20ba",
+								"cancelled"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminazione_Piano_User1_Error_Plan_Other_User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans/68600496a38b37b764550fee/cancelled",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans",
+								"68600496a38b37b764550fee",
+								"cancelled"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminazione_Piano_User1_Error_State",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans/6860049e346fd9ffcd3aaf68/cancelled",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans",
+								"6860049e346fd9ffcd3aaf68",
+								"cancelled"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminazione_Piano_User1_Error_AuthHeader",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans/685822f268f21a83c475c4dc/cancelled",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans",
+								"685822f268f21a83c475c4dc",
+								"cancelled"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Questa cartella contiene **10 richieste** che testano le funzionalità riservate agli utenti autenticati con ruolo user , relative alla gestione dei piani di navigazione marittima. I test coprono sia i flussi corretti che vari casi di errore legati alla creazione, visualizzazione e cancellazione dei piani.\n\n### 1\\. Richieste POST (Creazione piani)\n\n#### a. **Creazione_Piano**\n\nSimula la creazione corretta di un piano di navigazione.  \n**Input:** body JSON valido con rotta conforme (waypoints chiusi), date coerenti, area non vietata.\n\n#### b. **Creazione_Piano_Error_Route**\n\nIl piano contiene una rotta non valida: il primo e l’ultimo waypoint non coincidono.\n\n#### c. **Creazione_Piano_Error_Date**\n\nLa `startDate` è successiva alla `endDate`.\n\n#### d. **Creazione_Piano_Error_RestrictedArea**\n\nLa rotta fornita nel piano attraversa un’area vietata registrata nel sistema.\n\n---\n\n### 2\\. Richieste GET (Visualizzazione piani)\n\n#### a. **Acquisizione_piani_User**\n\nRecupera l’elenco dei piani creati da un determinato utente (filtrati per ID utente).\n\n#### b. **Acquisizione_piani_User_Error_InputQuery**\n\nIl parametro di query per l’identificazione dell’utente non è valido (es. ID malformato).  \n\n---\n\n### 3\\. Richieste PATCH (Eliminazione piani)\n\n#### a. **Eliminazione_Piano_User1**\n\nCancellazione corretta di un piano creato da un utente, in stato `pending`.\n\n#### b. **Eliminazione_Piano_User1_Error_Plan_Other_User**\n\nTentativo di eliminare un piano che appartiene a un altro utente.\n\n#### c. **Eliminazione_Piano_User1_Error_State**\n\nIl piano richiesto è in stato non `pending` (es. già approvato o completato).\n\n#### d. **Eliminazione_Piano_User1_Error_AuthHeader**\n\nLa richiesta non contiene l’header `Authorization` oppure contiene un token non valido."
+		},
+		{
+			"name": "Operator",
+			"item": [
+				{
+					"name": "Creazione_Area_Vietata",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"topLeft\": {\n    \"lat\": 45.0,\n    \"lon\": -130.0\n  },\n  \"bottomRight\": {\n    \"lat\": 34.0,\n    \"lon\": -100.0\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/restricted-areas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"restricted-areas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Creazione_Area_Vietata_Error_Inavlid_Lat_Lot",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"topLeft\": {\n    \"lat\": -130,   \n    \"lon\": 200     \n  },\n  \"bottomRight\": {\n    \"lat\": 95,     \n    \"lon\": -250    \n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/restricted-areas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"restricted-areas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Creazione_Area_Vietata_Error_Format_input",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"topLeft\": {\n    \n    \"lat\":-89\n            \n            },\n  \"bottomRight\": {\n      \"lat\": -2,\n      \"lon\": 31\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/restricted-areas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"restricted-areas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modifica_Area_Vietata",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"topLeft\": {\n    \"lon\": 33.0,\n    \"lat\": 32.5\n  },\n  \"bottomRight\": {\n    \"lon\": 50.5,\n    \"lat\": 13.0\n  }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/restricted-areas/6860047d70660ba32b2bedbf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"restricted-areas",
+								"6860047d70660ba32b2bedbf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modifica_Area_Vietata_Error_Same",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n  \"topLeft\":  { \"lon\": 10.0, \"lat\": 45.0 },\n  \"bottomRight\":  { \"lon\": 11, \"lat\": 44 }\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/restricted-areas/686004792031a538ebe56c0b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"restricted-areas",
+								"686004792031a538ebe56c0b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accettazione_Piano",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans/68600496a38b37b764550fee/accepted",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans",
+								"68600496a38b37b764550fee",
+								"accepted"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accettazione_Piano_Error_status_Rejected",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans/685122ae6d91770d497539eb/accepted",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans",
+								"685122ae6d91770d497539eb",
+								"accepted"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accettazione_Piano _Error_status_Accepted",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans/686004a3c6117241eb6182e9/accepted",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans",
+								"686004a3c6117241eb6182e9",
+								"accepted"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Riufiuto_piano",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reason\":\"terremoto\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans/6860062ed85cf52d5a6b6a47/rejected",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans",
+								"6860062ed85cf52d5a6b6a47",
+								"rejected"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Riufiuto_piano_Error_Invalid_Body",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans/686004818b6cba493a9a20ba/rejected",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans",
+								"686004818b6cba493a9a20ba",
+								"rejected"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Riufiuto_piano_Error_Status_rejected",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reason\":\"Maramoto\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans/6860049e346fd9ffcd3aaf68/rejected",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans",
+								"6860049e346fd9ffcd3aaf68",
+								"rejected"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Riufiuto_piano_Error_Status_accepted",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reason\":\"Maramoto\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans/686004a3c6117241eb6182e9/rejected",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans",
+								"686004a3c6117241eb6182e9",
+								"rejected"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Acquisizione_piani_Operator",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/navigation-plans?status=pending",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"navigation-plans"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "pending"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete_Area_Vietata",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/restricted-areas/686004792031a538ebe56c0b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"restricted-areas",
+								"686004792031a538ebe56c0b"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Questa cartella contiene richieste che simulano l’attività operativa di un utente autenticato con ruolo **operator**. Le operazioni coprono:\n\n- La creazione e modifica delle **aree vietate**\n    \n- L’approvazione o il rifiuto dei **piani di navigazione**\n    \n- L’acquisizione dell’elenco dei piani disponibili\n    \n- La cancellazione di un’area vietata\n    \n\n---\n\n### 1\\. Richieste POST (Creazione di aree vietate)\n\n#### a. **Creazione_Area_Vietata**\n\nRichiesta corretta di creazione di una nuova area vietata con coordinate valide.  \n**Risultato atteso:** `201 Created`\n\n#### b. **Creazione_Area_Vietata_Error_Invalid_Lat_Lon**\n\nIl body contiene coordinate `lat` o `lon` fuori dal dominio valido (lat ∉ \\[−90, 90\\], lon ∉ \\[−180, 180\\]).  \n**Risultato atteso:** `400 Bad Request` con messaggio di errore di validazione.\n\n#### c. **Creazione_Area_Vietata_Error_Format_Input**\n\nIl body fornito non rispetta la struttura prevista (es. proprietà mancanti o nomi errati).  \n**Risultato atteso:** `400 Bad Request` per errore di formato.\n\n---\n\n### 2\\. Richieste PUT (Modifica di aree vietate)\n\n#### a. **Modifica_Area_Vietata**\n\nModifica corretta dei vertici di un’area vietata esistente.\n\n#### b. **Modifica_Area_Vietata_Error_Same**\n\nI punti forniti coincidono con quelli già registrati per l’area, quindi non viene effettuata alcuna modifica.\n\n---\n\n### 3\\. Richieste PATCH (Approvazione e rifiuto di piani)\n\n#### a. **Accettazione_Piano**\n\nAccettazione di un piano in stato `pending`.\n\n#### b. **Accettazione_Piano_Error_Status_Rejected**\n\nTentativo di accettare un piano che è già stato rifiutato.\n\n#### c. **Accettazione_Piano_Error_Status_Accepted**\n\nIl piano che si tenta di accettare è già stato precedentemente accettato.\n\n#### d. **Riufiuto_Piano**\n\nRifiuto corretto di un piano in stato `pending`.\n\n#### e. **Riufiuto_Piano_Error_Invalid_Body**\n\nIl body non contiene un campo richiesto o presenta una struttura errata (es. motivazione mancante o malformata).\n\n#### f. **Riufiuto_Piano_Error_Status_Rejected**\n\nIl piano è già stato rifiutato precedentemente.\n\n#### g. **Riufiuto_Piano_Error_Status_Accepted**\n\nIl piano che si tenta di rifiutare è già stato accettato.\n\n---\n\n### 4\\. Richieste GET\n\n#### a. **Acquisizione_piani_Operator**\n\nRecupero dell’elenco dei piani disponibili per la revisione da parte dell’operatore.  \n**Risultato atteso:** `200 OK` con array di piani in stato `pending`\n\n---\n\n### 5\\. Richieste DELETE\n\n#### a. **Delete_Area_Vietata**\n\nEliminazione corretta di un’area vietata esistente."
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Ricarica_Credito_User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tokens\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/users/686003cb8cf7eaac02b6e4c2/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"686003cb8cf7eaac02b6e4c2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ricarica_Credito_User_Error_Input",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tokens\":\"e\"\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/users/68503a2086eb42322104f82a/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"68503a2086eb42322104f82a",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ricarica_Credito_User_Error_ObejectId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tokens\":\"e\"\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/users/68503adww86eb42322104f82a/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"68503adww86eb42322104f82a",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ricarica_Credito_User_Error_Role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tokens\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/users/68600414ac485ece0837e89e/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"68600414ac485ece0837e89e",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Questa cartella contiene una serie di richieste che testano le funzionalità di gestione del credito da parte di utenti con ruolo **Admin**. Le operazioni vengono effettuate su utenti con ruolo \"user\" e richiedono autenticazione tramite token JWT valido. Le richieste testano sia scenari corretti che casi di errore.\n\n### 1.Richiesta corretta\n\n- **Gestione credito con parametri validi**  \n    Simula una richiesta valida per aggiornare il credito di un utente.  \n    La chiamata include:\n    \n    - Un token JWT di un utente con ruolo `admin` nell'header `Authorization`\n        \n    - Un parametro `userId` valido nell’URL (ObjectId di MongoDB)\n        \n    - Un body JSON ben formato con i parametri richiesti (es. `amount`, `operation)`\n        \n\n### 2\\. Casi di errore\n\nTre richieste sono dedicate alla validazione dei comportamenti in caso di input scorretto o richieste non autorizzate.\n\n- **Body malformato**  \n    La richiesta contiene un body con input non valido, ad esempio struttura JSON errata o parametri mancanti o di tipo errato.\n    \n- **Parametro** **`userId`** **non conforme (non è un ObjectId)**  \n    Il parametro passato nell’URL come `userId` non rispetta il formato di un ObjectId di MongoDB (esempio: una stringa generica o un numero).\n    \n- **`userId`** **valido ma associato a un utente non di ruolo** **`user`**  \n    In questo test, il parametro `userId` è un ObjectId valido e corrisponde a un utente esistente, ma con un ruolo diverso da `user` (es. `operator` o `admin`)."
+		},
+		{
+			"name": "Aquisizione_aree_vietate",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/restricted-areas",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"restricted-areas"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

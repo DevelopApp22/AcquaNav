@@ -25,7 +25,7 @@ const errorHandler = (err: Error | ErrorResponse, req: Request, res: Response, n
     const errorFactory = new ErrorFactory
 
     if (err instanceof Error) {
-        console.error(err); // in produzione sostituire con logger centralizzato
+        console.error(err); 
         const internalError = errorFactory.getError(ErrEnum.InternalServerError)
         const error = internalError.getErrorResponse();
         statusCode = error.status;

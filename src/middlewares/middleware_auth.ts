@@ -71,6 +71,11 @@ export function verifyAndAuthenticate(req: Request, res: Response, next: NextFun
             req.user = payload;
             next();
         }
+         else {
+        const errorFactory = new ErrorFactory();
+        const err = errorFactory.getError(ErrEnum.InvalidToken);
+        next(err);
+      }
     } catch{ 
         const errorFactory = new ErrorFactory();
         const err = errorFactory.getError(ErrEnum.InvalidToken);

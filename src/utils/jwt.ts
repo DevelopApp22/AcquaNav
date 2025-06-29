@@ -1,7 +1,5 @@
 import jwt from 'jsonwebtoken';
-import path from 'path';
 import { UserPayload } from '../types/user_payload';
-import * as fs from 'fs';
 import { keyManager } from '../config/keyManager';
 
 /**
