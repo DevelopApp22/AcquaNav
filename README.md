@@ -653,7 +653,7 @@ export enum ErrEnum {
 > **Nota sull’utilizzo degli ID**
 >
 >I campi identificativi (`userId`, `areaId`, `planId`, ecc.) devono essere  forniti come stringhe valide nel formato **MongoDB ObjectId**, cioè come una `stringa esadecimale di 24 caratteri (12 byte), ad esempio 507f1f77bcf86cd799439011`
-Se l'ID fornito non rispetta il formato `ObjectId`, la richiesta verrà rifiutata con un errore 400  .
+Se l'ID fornito non rispetta il formato `ObjectId`, la richiesta verrà rifiutata.
 >
  > MongoDB genera automaticamente gli ObjectId al momento della creazione dei documenti, ma nelle richieste API in cui è necessario specificare un ID esistente (ad esempio per aggiornare, leggere o cancellare un documento), il client deve fornire un valore valido.
 
@@ -731,7 +731,7 @@ Nessuno
 
 La richiesta può essere svolta in questo modo:
 ```ts
-POST http://localhost:3000/restricted-areas
+POST http://localhost:3000/api/restricted-areas
 ```
 
 La risposta attesa avrà questa forma:
@@ -793,7 +793,7 @@ Authorization: Bearer {{jwt_token}}
 
 La risposta attesa avrà questa forma:
 ```ts
-201 OK
+201 CREATED
 {
   "topLeft": {
             "lon": 43.5,
@@ -812,7 +812,7 @@ La risposta attesa avrà questa forma:
 | **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
 |-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
 | Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
-| Params            | *areaId*             | `ObjectId`               | identificatvo dell'area vietata | No                      |               |
+| Params            | *areaId*             | `string`               | identificatvo dell'area vietata | No                      |               |
 | Body            | *topLeft*             | `Waypoint`               | Coordinata dell'angolo superiore sinistro | No                 |               |
 | Body            | *bottomRight*             | `Waypoint`               | Coordinata dell'angolo inferiore destro  | No                    |               |
 
@@ -859,7 +859,7 @@ La risposta attesa avrà questa forma:
 | **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
 |-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
 | Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
-| Params            | *areaId*             | `ObjectId`               | identificatvo dell'area vietata | No                      |     No         |
+| Params            | *areaId*             | `string`               | identificatvo dell'area vietata | No                      |     No         |
 
 
 
@@ -879,7 +879,7 @@ La risposta attesa avrà questa forma:
 | **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
 |-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
 | Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
-| Params            | *userId*             | `ObjectId`               | identificatvo dell'area vietata | No                      |               |
+| Params            | *userId*             | `string`               | identificatvo dell'area vietata | No                      |               |
 | Body            | *tokens*             | `number`               | Numero di token da ricaricare all'utente | Si                     |               |
 
 
@@ -1060,7 +1060,7 @@ La risposta attesa avrà questa forma:
 | **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
 |-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
 | Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
-| Params            | *planId*             | `ObjectId`               | identificatvo piano | No                      |               |
+| Params            | *planId*             | `string`               | identificatvo piano | No                      |               |
 
 
 La richiesta può essere svolta in questo modo:
@@ -1101,7 +1101,7 @@ La risposta attesa avrà questa forma:
 | **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
 |-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
 | Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
-| Params            | *planId*             | `ObjectId`               | identificatvo piano | No                      |               |
+| Params            | *planId*             | `string`               | identificatvo piano | No                      |               |
 
 
 La richiesta può essere svolta in questo modo:
@@ -1141,7 +1141,7 @@ La risposta attesa avrà questa forma:
 | **Posizione**   | **Nome**            | **Tipo**               | **Descrizione**                                | **Opzionalità**         |
 |-----------------|---------------------|------------------------|------------------------------------------------|-------------------------|
 | Header            | *Authorization*             | `string`               |JWT token necessario per l'autenticazione  | No                    |
-| Params            | *planId*             | `ObjectId`               | Identificatvo piano | No                      |               |
+| Params            | *planId*             | `string`               | Identificatvo piano | No                      |               |
 | Body            | *reason*          | `string`               | Motivo del rifiuto          | No                |
 
 La richiesta può essere svolta in questo modo:
@@ -1217,5 +1217,11 @@ http://localhost:3000/
 ```
 ### Test 
 Per eseguire i test delle API è possibile utilizzare Postman sfruttando i file forniti:
-- Collection: Collection_TUO_PROGETTO.postman_collection.json
-- Environment: Environment_TUO_PROGETTO.postman_environment.json
+- Collection: Collection_AcquaNav_PA_Pettinaro_2025.json
+- Environment:Postaman_ENV_AcquaNav_PA_Pettinaro_2025.json
+
+Inoltre sono state testate 2 funzioni middleware con jest 
+```bash
+  cd AcquaNav
+  npm test
+```
